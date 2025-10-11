@@ -6,22 +6,22 @@
  */
 
 import fs from 'node:fs';
-import { loadConfig } from '../lib/config.mjs';
+import { loadConfig } from './cli/intel_mjs/src/lib/config.mjs';
 import path from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 
 // Core modules
-import JqExecutor from '../lib/core/jq-executor.mjs';
-import * as projectUtils from '../lib/project-utils.mjs';
+import JqExecutor from './cli/intel_mjs/src/lib/core/jq-executor.mjs';
+import * as projectUtils from './cli/intel_mjs/src/lib/project-utils.mjs';
 
 // Graph modules
-import KnowledgeGraph from '../lib/graph/knowledge-graph.mjs';
-import PatternDetector from '../lib/graph/pattern-detector.mjs';
-import CentralityAnalyzer from '../lib/graph/centrality-analyzer.mjs';
+import KnowledgeGraph from './cli/intel_mjs/src/lib/graph/knowledge-graph.mjs';
+import PatternDetector from './cli/intel_mjs/src/lib/graph/pattern-detector.mjs';
+import CentralityAnalyzer from './cli/intel_mjs/src/lib/graph/centrality-analyzer.mjs';
 
 // Workflow modules
-import WorkflowEngine from '../lib/workflows/workflow-engine.mjs';
-import OutputFormatter from '../lib/workflows/output-formatter.mjs';
+import WorkflowEngine from './cli/intel_mjs/src/lib/workflows/workflow-engine.mjs';
+import OutputFormatter from './cli/intel_mjs/src/lib/workflows/output-formatter.mjs';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -34,7 +34,7 @@ const [command, ...args] = cliArgs;
 const envIndex = process.env.PROJECT_INDEX;
 const projectRoot = envIndex
   ? path.resolve(path.dirname(envIndex))
-  : path.resolve(__dirname, '..', '..', '..', '..');
+  : process.cwd();
 const indexPath = envIndex
   ? path.resolve(envIndex)
   : path.join(projectRoot, 'PROJECT_INDEX.json');

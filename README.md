@@ -1,5 +1,12 @@
 # Ultimate Intelligence System for Claude Code
 
+[![Tests](https://github.com/yangsi7/intelligence-system/workflows/Test%20Python%20Scripts/badge.svg)](https://github.com/yangsi7/intelligence-system/actions)
+[![Python 3.8+](https://img.shields.io/badge/python-3.8+-blue.svg)](https://www.python.org/downloads/)
+[![Node.js 18+](https://img.shields.io/badge/node.js-18+-green.svg)](https://nodejs.org/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![macOS](https://img.shields.io/badge/macOS-supported-success.svg)](https://www.apple.com/macos/)
+[![Linux](https://img.shields.io/badge/Linux-supported-success.svg)](https://www.linux.org/)
+
 **Intelligence-Powered Multi-Agent Orchestration System**
 
 Coordinate specialized AI agents with deep code intelligence for complex development tasks.
@@ -359,7 +366,13 @@ This removes:
 
 ## Contributing
 
-This system is designed to be forked and customized for your needs. Contributions welcome!
+We welcome contributions! Please see:
+- **[CONTRIBUTING.md](CONTRIBUTING.md)** - Development setup and guidelines
+- **[CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md)** - Community guidelines
+- **[SECURITY.md](SECURITY.md)** - Reporting issues
+- **[TESTING.md](TESTING.md)** - Testing guide
+
+This system is designed to be forked and customized for your needs.
 
 ## License
 

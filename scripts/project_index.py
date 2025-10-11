@@ -14,7 +14,7 @@ Usage: python project_index.py
 Output: PROJECT_INDEX.json
 """
 
-__version__ = "0.2.0-beta"
+__version__ = "1.2.0"
 
 import json
 import os

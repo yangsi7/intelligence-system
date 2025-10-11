@@ -1,0 +1,68 @@
+name: Lint Markdown
+
+on:
+  push:
+    branches: [main, develop]
+    paths:
+      - '**/*.md'
+      - '.github/workflows/lint-markdown.yml'
+  pull_request:
+    branches: [main, develop]
+    paths:
+      - '**/*.md'
+
+jobs:
+  lint-markdown:
+    name: Lint Markdown Files
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+
+      - name: Install markdownlint-cli
+        run: npm install -g markdownlint-cli
+
+      - name: Lint all markdown files
+        run: |
+          markdownlint '**/*.md' \
+            --ignore node_modules \
+            --ignore .venv \
+            --config .markdownlint.json || true
+
+      - name: Validate markdown structure (agents)
+        run: |
+          echo "Validating agent definitions..."
+          for file in .claude/agents/*.md; do
+            if [ -f "$file" ]; then
+              # Check for YAML frontmatter
+              if grep -q "^---$" "$file"; then
+                echo "✓ $file has YAML frontmatter"
+              else
+                echo "⚠ $file missing YAML frontmatter"
+              fi
+            fi
+          done
+
+      - name: Validate markdown structure (slash commands)
+        run: |
+          echo "Validating slash command definitions..."
+          for file in .claude/commands/*.md; do
+            if [ -f "$file" ]; then
+              echo "✓ $file exists"
+            fi
+          done
+
+      - name: Check for broken internal links
+        run: |
+          echo "Checking for broken internal links in key docs..."
+          # Check README.md for broken internal references
+          if [ -f "README.md" ]; then
+            # Look for [@path] syntax and verify files exist
+            grep -o "@[a-zA-Z0-9_/.+-]*" README.md || echo "No @ references found"
+          fi

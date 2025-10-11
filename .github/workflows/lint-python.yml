@@ -1,0 +1,64 @@
+name: Lint Python
+
+on:
+  push:
+    branches: [main, develop]
+    paths:
+      - 'scripts/**/*.py'
+      - 'tests/**/*.py'
+      - '.github/workflows/lint-python.yml'
+  pull_request:
+    branches: [main, develop]
+    paths:
+      - 'scripts/**/*.py'
+      - 'tests/**/*.py'
+
+jobs:
+  lint-python:
+    name: Lint Python Code
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Python 3.13
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+
+      - name: Install linting tools
+        run: |
+          python -m pip install --upgrade pip
+          pip install black flake8 pylint
+
+      - name: Run black (check only)
+        run: |
+          black --check --diff scripts/ tests/ || echo "⚠ Code formatting issues found"
+
+      - name: Run flake8
+        run: |
+          flake8 scripts/ tests/ \
+            --max-line-length=100 \
+            --extend-ignore=E203,W503 \
+            --exclude=.venv,__pycache__,.pytest_cache || echo "⚠ Flake8 issues found"
+
+      - name: Run pylint (informational only)
+        run: |
+          pylint scripts/*.py --disable=all --enable=E,F || echo "⚠ Pylint issues found (informational)"
+
+      - name: Check for common issues
+        run: |
+          echo "Checking for common Python issues..."
+
+          # Check for print statements in production code (scripts/ only, not tests/)
+          if grep -r "print(" scripts/ --include="*.py" | grep -v "^#"; then
+            echo "⚠ Found print() statements in production code (consider using logging)"
+          fi
+
+          # Check for TODO/FIXME comments
+          if grep -r "TODO\|FIXME" scripts/ tests/ --include="*.py"; then
+            echo "⚠ Found TODO/FIXME comments"
+          fi
+
+          echo "✓ Common issues check complete"

@@ -1,0 +1,81 @@
+name: Test Installation
+
+on:
+  push:
+    branches: [main, develop]
+    paths:
+      - 'install.sh'
+      - 'uninstall.sh'
+      - 'test-installation.sh'
+      - '.github/workflows/test-installation.yml'
+  pull_request:
+    branches: [main, develop]
+
+jobs:
+  test-install:
+    name: Test Installation on ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest]
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Install dependencies (Ubuntu)
+        if: runner.os == 'Linux'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y jq
+
+      - name: Install dependencies (macOS)
+        if: runner.os == 'macOS'
+        run: |
+          brew install jq
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.8'
+
+      - name: Run installation script
+        run: |
+          bash install.sh
+
+      - name: Verify installation directory created
+        run: |
+          test -d "$HOME/.claude-intelligence-system" || (echo "Installation directory not found" && exit 1)
+          echo "✓ Installation directory exists"
+
+      - name: Verify agents installed
+        run: |
+          test -d "$HOME/.claude/agents" || (echo "Agents directory not found" && exit 1)
+          test -f "$HOME/.claude/agents/orchestrator.md" || (echo "orchestrator.md not found" && exit 1)
+          test -f "$HOME/.claude/agents/researcher.md" || (echo "researcher.md not found" && exit 1)
+          test -f "$HOME/.claude/agents/implementor.md" || (echo "implementor.md not found" && exit 1)
+          echo "✓ Agents installed"
+
+      - name: Verify slash commands installed
+        run: |
+          test -d "$HOME/.claude/commands" || (echo "Commands directory not found" && exit 1)
+          test -f "$HOME/.claude/commands/intel.md" || (echo "intel.md not found" && exit 1)
+          test -f "$HOME/.claude/commands/orchestrate.md" || (echo "orchestrate.md not found" && exit 1)
+          echo "✓ Slash commands installed"
+
+      - name: Test code-intel.mjs help command
+        run: |
+          node "$HOME/.claude-intelligence-system/improved_intelligence/code-intel.mjs" help
+
+      - name: Test uninstall script
+        run: |
+          bash "$HOME/.claude-intelligence-system/uninstall.sh"
+          test ! -d "$HOME/.claude-intelligence-system" || (echo "Installation directory still exists after uninstall" && exit 1)
+          echo "✓ Uninstall successful"

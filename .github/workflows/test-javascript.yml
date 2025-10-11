@@ -1,0 +1,68 @@
+name: Test JavaScript CLI
+
+on:
+  push:
+    branches: [main, develop]
+    paths:
+      - '.claude/improved_intelligence/**'
+      - '.github/workflows/test-javascript.yml'
+  pull_request:
+    branches: [main, develop]
+    paths:
+      - '.claude/improved_intelligence/**'
+
+jobs:
+  test-javascript:
+    name: Test on ${{ matrix.os }} - Node.js ${{ matrix.node-version }}
+    runs-on: ${{ matrix.os }}
+
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest]
+        node-version: ['18', '20', '22']
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+
+      - name: Test code-intel.mjs loads
+        run: |
+          node .claude/improved_intelligence/code-intel.mjs --version || echo "Version check not available"
+
+      - name: Test CLI help command
+        run: |
+          node .claude/improved_intelligence/code-intel.mjs help
+
+      - name: Test CLI commands execute
+        run: |
+          # Test that commands don't throw syntax errors
+          node -c .claude/improved_intelligence/code-intel.mjs
+          node -c .claude/improved_intelligence/cli/intel_mjs/src/cli/quick-search.mjs
+          node -c .claude/improved_intelligence/cli/intel_mjs/src/cli/code-intel.mjs
+          node -c .claude/improved_intelligence/cli/intel_mjs/src/cli/gap-analysis.mjs
+
+      - name: Test all MJS modules load
+        run: |
+          for file in $(find .claude/improved_intelligence -name "*.mjs"); do
+            echo "Checking $file..."
+            node --check "$file"
+          done
+
+      - name: Test PROJECT_INDEX.json handling (if exists)
+        run: |
+          if [ -f "PROJECT_INDEX.json" ]; then
+            node -e "
+              const fs = require('fs');
+              const index = JSON.parse(fs.readFileSync('PROJECT_INDEX.json', 'utf8'));
+              console.log('PROJECT_INDEX.json is valid JSON');
+              console.log('Files indexed:', Object.keys(index.f || index.files || {}).length);
+            "
+          else
+            echo "PROJECT_INDEX.json not found (expected for clean checkout)"
+          fi

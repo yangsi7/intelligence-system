@@ -590,10 +590,10 @@ def extract_javascript_signatures(content: str) -> Dict[str, any]:
     for match in re.finditer(require_pattern, content):
         result['imports'].append(match.group(1))
     
-    # Extract type aliases (TypeScript) - simpler approach with brace counting
-    type_alias_pattern = r'(?:export\s+)?type\s+(\w+)\s*=\s*(.+?)(?:;[\s]*(?:(?:export\s+)?(?:type|const|let|var|function|class|interface|enum)\s+|\/\/|$))'
-    
-    for match in re.finditer(type_alias_pattern, content, re.MULTILINE | re.DOTALL):
+    # Extract type aliases (TypeScript) - improved pattern to capture all type aliases
+    type_alias_pattern = r'(?:export\s+)?type\s+(\w+)\s*=\s*([^;]+);'
+
+    for match in re.finditer(type_alias_pattern, content):
         alias_name, alias_type = match.groups()
         # Clean up the type definition
         clean_type = ' '.join(alias_type.strip().split())

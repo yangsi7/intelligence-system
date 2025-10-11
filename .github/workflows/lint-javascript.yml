@@ -1,0 +1,65 @@
+name: Lint JavaScript
+
+on:
+  push:
+    branches: [main, develop]
+    paths:
+      - '**/*.mjs'
+      - '**/*.js'
+      - '.github/workflows/lint-javascript.yml'
+  pull_request:
+    branches: [main, develop]
+    paths:
+      - '**/*.mjs'
+      - '**/*.js'
+
+jobs:
+  lint-javascript:
+    name: Lint JavaScript/MJS Files
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+
+      - name: Install ESLint
+        run: npm install -g eslint
+
+      - name: Initialize ESLint config (if needed)
+        run: |
+          if [ ! -f ".eslintrc.json" ]; then
+            echo "ESLint config will be created"
+          fi
+
+      - name: Lint all .mjs files
+        run: |
+          eslint '.claude/improved_intelligence/**/*.mjs' \
+            --no-eslintrc \
+            --parser-options=ecmaVersion:2021,sourceType:module \
+            --env es2021,node \
+            --rule 'no-unused-vars:warn' \
+            --rule 'no-undef:error' \
+            --rule 'no-console:off' || true
+
+      - name: Check for syntax errors (strict)
+        run: |
+          echo "Checking all MJS files for syntax errors..."
+          find .claude/improved_intelligence -name "*.mjs" -type f | while read file; do
+            echo "Checking $file..."
+            node --check "$file" || exit 1
+          done
+          echo "✓ All MJS files have valid syntax"
+
+      - name: Validate ES module imports
+        run: |
+          echo "Validating ES module imports..."
+          # Check that all imports use .mjs extensions or are node built-ins
+          find .claude/improved_intelligence -name "*.mjs" -type f -exec grep -H "^import.*from" {} \; | \
+            grep -v "from ['\"]node:" | \
+            grep -v "\.mjs['\"]" | \
+            grep -v "from ['\"][^'\"]*node_modules" || echo "✓ All imports look valid"

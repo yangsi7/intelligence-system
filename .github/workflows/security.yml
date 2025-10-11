@@ -1,0 +1,132 @@
+name: Security Scanning
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main, develop]
+  schedule:
+    # Run weekly on Monday at 00:00 UTC
+    - cron: '0 0 * * 1'
+
+jobs:
+  codeql-python:
+    name: CodeQL Analysis (Python)
+    runs-on: ubuntu-latest
+    permissions:
+      actions: read
+      contents: read
+      security-events: write
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Initialize CodeQL
+        uses: github/codeql-action/init@v3
+        with:
+          languages: python
+          queries: security-and-quality
+
+      - name: Autobuild
+        uses: github/codeql-action/autobuild@v3
+
+      - name: Perform CodeQL Analysis
+        uses: github/codeql-action/analyze@v3
+        with:
+          category: "/language:python"
+
+  codeql-javascript:
+    name: CodeQL Analysis (JavaScript)
+    runs-on: ubuntu-latest
+    permissions:
+      actions: read
+      contents: read
+      security-events: write
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Initialize CodeQL
+        uses: github/codeql-action/init@v3
+        with:
+          languages: javascript
+          queries: security-and-quality
+
+      - name: Autobuild
+        uses: github/codeql-action/autobuild@v3
+
+      - name: Perform CodeQL Analysis
+        uses: github/codeql-action/analyze@v3
+        with:
+          category: "/language:javascript"
+
+  shellcheck:
+    name: ShellCheck Analysis
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Run ShellCheck
+        uses: ludeeus/action-shellcheck@master
+        with:
+          scandir: '.'
+          severity: warning
+          check_together: 'yes'
+
+      - name: Verify shell script permissions
+        run: |
+          echo "Checking executable permissions on shell scripts..."
+          for script in install.sh uninstall.sh test-installation.sh; do
+            if [ -f "$script" ]; then
+              if [ -x "$script" ]; then
+                echo "✓ $script is executable"
+              else
+                echo "⚠ $script is not executable"
+              fi
+            fi
+          done
+
+  dependency-review:
+    name: Dependency Review
+    runs-on: ubuntu-latest
+    if: github.event_name == 'pull_request'
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Dependency Review
+        uses: actions/dependency-review-action@v4
+        with:
+          fail-on-severity: moderate
+
+  secret-scanning:
+    name: Secret Scanning
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Check for hardcoded secrets
+        run: |
+          echo "Checking for potential secrets..."
+
+          # Check for common secret patterns
+          if grep -r "password.*=.*['\"]" . --include="*.py" --include="*.js" --include="*.mjs" --exclude-dir=".git" --exclude-dir="node_modules" --exclude-dir=".venv"; then
+            echo "⚠ Found potential hardcoded passwords"
+          fi
+
+          if grep -r "api[_-]key.*=.*['\"]" . --include="*.py" --include="*.js" --include="*.mjs" --exclude-dir=".git" --exclude-dir="node_modules" --exclude-dir=".venv"; then
+            echo "⚠ Found potential hardcoded API keys"
+          fi
+
+          if grep -r "secret.*=.*['\"]" . --include="*.py" --include="*.js" --include="*.mjs" --exclude-dir=".git" --exclude-dir="node_modules" --exclude-dir=".venv"; then
+            echo "⚠ Found potential hardcoded secrets"
+          fi
+
+          echo "✓ Secret scanning complete"
