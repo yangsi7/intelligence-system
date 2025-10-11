@@ -1,0 +1,60 @@
+{
+  "onboarding": [
+    {
+      "command": "overview",
+      "args": ["60"]
+    },
+    {
+      "command": "hotspots",
+      "args": ["15"]
+    },
+    {
+      "command": "patterns",
+      "args": []
+    },
+    {
+      "command": "graph",
+      "args": ["stats"]
+    }
+  ],
+  "investigate": [
+    {
+      "command": "bug",
+      "args": ["UNSPECIFIED_PATTERN"]
+    },
+    {
+      "command": "patterns",
+      "args": []
+    },
+    {
+      "command": "hotspots",
+      "args": ["10"]
+    },
+    {
+      "command": "graph",
+      "args": ["cycles"]
+    }
+  ],
+  "audit": [
+    {
+      "command": "overview",
+      "args": ["90"]
+    },
+    {
+      "command": "patterns",
+      "args": []
+    },
+    {
+      "command": "hotspots",
+      "args": ["20"]
+    },
+    {
+      "command": "graph",
+      "args": ["stats"]
+    },
+    {
+      "command": "graph",
+      "args": ["cycles"]
+    }
+  ]
+}

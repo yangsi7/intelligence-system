@@ -1,0 +1,10 @@
+[
+  {
+    "command": "overview",
+    "args": ["30"]
+  },
+  {
+    "command": "hotspots",
+    "args": ["5"]
+  }
+]

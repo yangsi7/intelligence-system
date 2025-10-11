@@ -1,0 +1,18 @@
+[
+  {
+    "command": "overview",
+    "args": ["60"]
+  },
+  {
+    "command": "patterns",
+    "args": ["all"]
+  },
+  {
+    "command": "hotspots",
+    "args": ["15"]
+  },
+  {
+    "command": "graph",
+    "args": ["cycles"]
+  }
+]

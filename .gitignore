@@ -1,0 +1,22 @@
+# macOS
+.DS_Store
+__MACOSX/
+
+# Logs
+*.log
+
+# Temporary files
+*.tmp
+.temp/
+
+# Backup files
+*.backup
+*.bak
+
+# IDE
+.idea/
+.vscode/
+*.swp
+
+# Test outputs
+test-output/
