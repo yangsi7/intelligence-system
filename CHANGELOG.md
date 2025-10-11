@@ -5,6 +5,43 @@ All notable changes to the Ultimate Intelligence System will be documented in th
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.1.0] - 2025-10-11
+
+### Added
+- **PROJECT_INDEX Integration** - Absorbed claude-code-project-index into unified system
+- index-analyzer agent with enhanced intelligence CLI support
+- /index slash command for creating/updating PROJECT_INDEX.json
+- Auto-indexing with -i flag (`fix bug -i50`, `-i75d10`, etc.)
+- Clipboard export with -ic flag for external AI
+- Python 3.8+ detection in installer
+- Automatic hook configuration for -i flag and session-end refresh
+- PROJECT_INDEX scripts (project_index.py, index_utils.py, hooks)
+- Migration detection and cleanup for old claude-code-project-index installations
+
+### Changed
+- Agent count: 6 → 7 (added index-analyzer)
+- Slash command count: 5 → 6 (added /index)
+- Installation now includes PROJECT_INDEX scripts and hooks
+- Enhanced documentation with PROJECT_INDEX usage examples
+- index-analyzer agent now references unified intelligence system
+- Updated install.sh with comprehensive PROJECT_INDEX setup
+
+### Features
+- **Deep Code Intelligence**: Functions, classes, signatures with type annotations
+- **Call Graph Analysis**: What calls what, complete execution paths
+- **Dependency Mapping**: Import relationships and module coupling
+- **Auto-Refresh**: Hooks keep index current on session end
+- **Smart Regeneration**: Only regenerates when files change or size differs
+- **Size Control**: `-i50` (50k tokens), `-i75d10` (75k with depth 10)
+- **External AI Export**: `-ic200` exports up to 800k tokens for external AI
+
+### Removed
+- Dependency on separate claude-code-project-index installation
+- External installation step for PROJECT_INDEX
+
+### Fixed
+- GitHub repository URLs updated to correct username (yangsi7)
+
 ## [1.0.0] - 2025-10-11
 
 ### Added
@@ -64,7 +101,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Future Enhancements
 
-### Planned for v1.1.0
+### Planned for v1.2.0
 - GitHub Actions integration
 - CI/CD workflow examples
 - Additional workflow definitions
@@ -72,7 +109,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Performance optimizations
 - Extended CLI commands
 
-### Planned for v1.2.0
+### Planned for v2.0.0
 - VS Code extension integration
 - Plugin system for custom orchestrators
 - Web dashboard for monitoring
@@ -88,4 +125,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
-For full release notes and updates, see: https://github.com/simonpierreboucher0/intelligence-system/releases
+For full release notes and updates, see: https://github.com/yangsi7/intelligence-system/releases

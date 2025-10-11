@@ -55,6 +55,25 @@ fi
 
 echo "✓ All dependencies satisfied"
 
+# Check for Python 3.8+ (for PROJECT_INDEX)
+PYTHON_CMD=""
+if command -v python3 &> /dev/null; then
+    PYTHON_VERSION=$(python3 --version 2>&1 | grep -oE '[0-9]+\.[0-9]+' | head -1)
+    PYTHON_MAJOR=$(echo "$PYTHON_VERSION" | cut -d'.' -f1)
+    PYTHON_MINOR=$(echo "$PYTHON_VERSION" | cut -d'.' -f2)
+
+    if [[ "$PYTHON_MAJOR" -ge 3 ]] && [[ "$PYTHON_MINOR" -ge 8 ]]; then
+        PYTHON_CMD="python3"
+        echo "✓ Python $PYTHON_VERSION (required: ≥3.8 for PROJECT_INDEX)"
+    else
+        echo "⚠️  Python $PYTHON_VERSION found (PROJECT_INDEX needs ≥3.8)"
+        echo "   PROJECT_INDEX features will be limited"
+    fi
+else
+    echo "⚠️  Python 3.8+ not found (recommended for PROJECT_INDEX)"
+    echo "   Install Python 3.8+ for full indexing capabilities"
+fi
+
 # Check if already installed
 if [[ -d "$INSTALL_DIR" ]]; then
     echo ""
@@ -128,6 +147,12 @@ if [[ -f "$SCRIPT_DIR/.claude/improved_intelligence/code-intel.mjs" || -f "$SCRI
         fi
     fi
 
+    # Copy PROJECT_INDEX scripts
+    if [[ -d "$SCRIPT_DIR/scripts" ]]; then
+        mkdir -p "$INSTALL_DIR/scripts"
+        cp -r "$SCRIPT_DIR/scripts"/* "$INSTALL_DIR/scripts/" 2>/dev/null || true
+    fi
+
     # Clean macOS artifacts
     find "$INSTALL_DIR" -name ".DS_Store" -delete 2>/dev/null || true
     find "$INSTALL_DIR" -name "__MACOSX" -type d -exec rm -rf {} + 2>/dev/null || true
@@ -161,6 +186,11 @@ else
         fi
     fi
 
+    # Ensure scripts directory exists
+    if [[ ! -d "$INSTALL_DIR/scripts" ]] && [[ -d "$INSTALL_DIR/.claude/scripts" ]]; then
+        mv "$INSTALL_DIR/.claude/scripts" "$INSTALL_DIR/" 2>/dev/null || true
+    fi
+
     # Clean macOS artifacts
     find "$INSTALL_DIR" -name ".DS_Store" -delete 2>/dev/null || true
     find "$INSTALL_DIR" -name "__MACOSX" -type d -exec rm -rf {} + 2>/dev/null || true
@@ -175,7 +205,101 @@ chmod +x "$INSTALL_DIR/install.sh" 2>/dev/null || true
 chmod +x "$INSTALL_DIR/uninstall.sh" 2>/dev/null || true
 chmod +x "$INSTALL_DIR/improved_intelligence/code-intel.mjs" 2>/dev/null || true
 chmod +x "$INSTALL_DIR/improved_intelligence/cli/intel_mjs/src/cli"/*.mjs 2>/dev/null || true
+
+# Make PROJECT_INDEX scripts executable
+if [[ -d "$INSTALL_DIR/scripts" ]]; then
+    chmod +x "$INSTALL_DIR/scripts"/*.py 2>/dev/null || true
+    chmod +x "$INSTALL_DIR/scripts"/*.sh 2>/dev/null || true
+fi
+
 echo "✓ Permissions set"
+
+# Configure PROJECT_INDEX integration
+if [[ -n "$PYTHON_CMD" ]] && [[ -d "$INSTALL_DIR/scripts" ]]; then
+    echo ""
+    echo "Configuring PROJECT_INDEX integration..."
+
+    # Save Python command
+    echo "$PYTHON_CMD" > "$INSTALL_DIR/.python_cmd"
+    echo "   ✓ Python command saved"
+
+    # Configure hooks in settings.json
+    SETTINGS_FILE="$HOME/.claude/settings.json"
+
+    # Ensure settings.json exists
+    mkdir -p "$HOME/.claude"
+    if [[ ! -f "$SETTINGS_FILE" ]]; then
+        echo "{}" > "$SETTINGS_FILE"
+    fi
+
+    # Backup settings.json
+    cp "$SETTINGS_FILE" "${SETTINGS_FILE}.backup-$(date +%Y%m%d_%H%M%S)"
+
+    # Update hooks with jq
+    if command -v jq &> /dev/null; then
+        # Create temporary jq script
+        JQ_SCRIPT='
+        # Initialize hooks if not present
+        if .hooks == null then .hooks = {} else . end |
+
+        # UserPromptSubmit hook (for -i flag detection)
+        .hooks.UserPromptSubmit = (
+          if .hooks.UserPromptSubmit == null then [] else .hooks.UserPromptSubmit end |
+          # Remove old PROJECT_INDEX hooks
+          [.[] | select(
+            all(.hooks[]?.command // "";
+              (contains("i_flag_hook.py") or contains("claude-code-project-index")) | not)
+          )] +
+          # Add new hook
+          [{
+            "hooks": [{
+              "type": "command",
+              "command": "'"$HOME"'/.claude-intelligence-system/scripts/run_python.sh '"$HOME"'/.claude-intelligence-system/scripts/i_flag_hook.py",
+              "timeout": 20
+            }]
+          }]
+        ) |
+
+        # Stop hook (for index refresh on session end)
+        .hooks.Stop = (
+          if .hooks.Stop == null then [] else .hooks.Stop end |
+          # Remove old PROJECT_INDEX hooks
+          [.[] | select(
+            all(.hooks[]?.command // "";
+              (contains("stop_hook.py") or contains("claude-code-project-index")) | not)
+          )] +
+          # Add new hook
+          [{
+            "matcher": "",
+            "hooks": [{
+              "type": "command",
+              "command": "'"$HOME"'/.claude-intelligence-system/scripts/run_python.sh '"$HOME"'/.claude-intelligence-system/scripts/stop_hook.py",
+              "timeout": 10
+            }]
+          }]
+        )
+        '
+
+        # Apply jq script
+        if jq "$JQ_SCRIPT" "$SETTINGS_FILE" > "${SETTINGS_FILE}.tmp"; then
+            mv "${SETTINGS_FILE}.tmp" "$SETTINGS_FILE"
+            echo "   ✓ Hooks configured in settings.json"
+        else
+            echo "   ⚠️  Could not update hooks automatically"
+            echo "      You can configure manually if needed"
+            rm "${SETTINGS_FILE}.tmp" 2>/dev/null || true
+        fi
+    else
+        echo "   ⚠️  jq not available, skipping hook configuration"
+        echo "      Hooks can be configured manually if needed"
+    fi
+
+    echo "✓ PROJECT_INDEX integration configured"
+elif [[ ! -n "$PYTHON_CMD" ]]; then
+    echo ""
+    echo "⚠️  Skipping PROJECT_INDEX integration (Python 3.8+ not found)"
+    echo "   Install Python 3.8+ and re-run installer for full capabilities"
+fi
 
 # Install agents to ~/.claude/agents/
 echo ""
@@ -232,13 +356,16 @@ echo "📁 Installation location: $INSTALL_DIR"
 echo ""
 echo "🤖 Installed Components:"
 echo "   • 3 Orchestrator patterns (meta, normal, integrated)"
-echo "   • 6 Specialized agents (orchestrator, researcher, etc.)"
+echo "   • 7 Specialized agents (orchestrator, researcher, implementor, reviewer, tester, postflight, index-analyzer)"
 echo "   • 1 System installer agent (for verification/repair)"
-echo "   • 5 Slash commands (/intel, /orchestrate, /search, /validate, /workflow)"
+echo "   • 6 Slash commands (/intel, /orchestrate, /search, /validate, /workflow, /index)"
 echo "   • Intelligence CLI (29+ commands)"
+echo "   • PROJECT_INDEX integration (auto-indexing with -i flag)"
 echo "   • 6 Workflow definitions"
 echo ""
 echo "🚀 Quick Start:"
+echo "   • Create project index: /index"
+echo "   • Use -i flag: 'fix auth bug -i'"
 echo "   • Verify installation: 'Verify my intelligence system'"
 echo "   • Quick code analysis: /intel compact"
 echo "   • Orchestrate workflow: /orchestrate integrated \"your task\""
@@ -254,3 +381,38 @@ echo "   • Verify: Ask Claude 'Verify my intelligence system'"
 echo "   • Repair: Ask Claude 'Fix my intelligence system'"
 echo "   • Uninstall: $INSTALL_DIR/uninstall.sh"
 echo ""
+
+# Check for old claude-code-project-index installation
+if [[ -d "$HOME/.claude-code-project-index" ]]; then
+    echo "=========================================="
+    echo "📁 Old PROJECT_INDEX Installation Detected"
+    echo "=========================================="
+    echo ""
+    echo "Found separate claude-code-project-index installation at:"
+    echo "   ~/.claude-code-project-index/"
+    echo ""
+    echo "This has been superseded by the integrated PROJECT_INDEX in"
+    echo "the Ultimate Intelligence System. Your old installation can"
+    echo "be safely removed."
+    echo ""
+
+    if [ -t 0 ]; then
+        # Interactive mode
+        read -p "Remove old installation? (y/N): " -n 1 -r
+        echo ""
+        if [[ $REPLY =~ ^[Yy]$ ]]; then
+            rm -rf "$HOME/.claude-code-project-index"
+            echo "✓ Removed old installation"
+            echo ""
+        else
+            echo "ℹ️  Old installation kept (can be removed manually)"
+            echo "   To remove: rm -rf ~/.claude-code-project-index"
+            echo ""
+        fi
+    else
+        # Non-interactive mode
+        echo "ℹ️  To remove old installation, run:"
+        echo "   rm -rf ~/.claude-code-project-index"
+        echo ""
+    fi
+fi

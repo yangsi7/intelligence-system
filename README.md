@@ -7,7 +7,7 @@ Coordinate specialized AI agents with deep code intelligence for complex develop
 ## Quick Install
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/simonpierreboucher0/intelligence-system/main/install.sh | bash
+curl -fsSL https://raw.githubusercontent.com/yangsi7/intelligence-system/main/install.sh | bash
 ```
 
 ## What You Get
@@ -17,13 +17,14 @@ curl -fsSL https://raw.githubusercontent.com/simonpierreboucher0/intelligence-sy
 - **Normal Orchestrator** - Standard workflow for routine development
 - **Integrated Orchestrator** - Intelligence-first for complex analysis
 
-### 6 Specialized Agents
+### 7 Specialized Agents
 - **Orchestrator** - Multi-agent workflow coordinator
 - **Researcher** - Code intelligence gatherer
 - **Implementor** - Code implementation specialist
 - **Reviewer** - Code review specialist
 - **Tester** - Test creation and execution
 - **Postflight** - Final validation and quality checks
+- **Index-Analyzer** - PROJECT_INDEX.json deep code intelligence
 
 ### Unified Intelligence CLI
 - 29+ commands for code analysis
@@ -33,12 +34,20 @@ curl -fsSL https://raw.githubusercontent.com/simonpierreboucher0/intelligence-sy
 - Dependency analysis
 - Call graph generation
 
-### 5 Slash Commands
+### PROJECT_INDEX Integration
+- **Integrated indexer** from claude-code-project-index
+- **Auto-indexing with -i flag** - `fix bug -i50`
+- **Deep code intelligence** - Functions, classes, call graphs
+- **Automatic refresh** - Keeps index current
+- **Clipboard export** - `-ic` for external AI
+
+### 6 Slash Commands
 - `/intel` - Code intelligence analysis
 - `/orchestrate` - Orchestrator invocation
 - `/search` - Code search utilities
 - `/validate` - Validation operations
 - `/workflow` - Workflow execution
+- `/index` - Create/update PROJECT_INDEX.json
 
 ### 6 Workflow Definitions
 - **Built-in:** onboarding, investigate, audit
@@ -49,6 +58,13 @@ curl -fsSL https://raw.githubusercontent.com/simonpierreboucher0/intelligence-sy
 After installation, these commands become available:
 
 ```bash
+# PROJECT_INDEX - Deep code understanding
+/index                            # Create/update PROJECT_INDEX.json
+fix auth bug -i                   # Auto-index (default 50k)
+fix auth bug -i75                 # Custom size (75k tokens)
+fix auth bug -i50d10              # With depth limit
+analyze codebase -ic200           # Clipboard export for external AI
+
 # Quick code intelligence
 /intel compact                    # Fast overview (2-3k tokens, ~1s)
 /intel standard                   # Balanced analysis (8-10k tokens, ~3s)
@@ -79,15 +95,18 @@ The installer will:
 
 1. Install to `~/.claude-intelligence-system/`
 2. Copy 7 agents to `~/.claude/agents/`
-3. Copy 5 slash commands to `~/.claude/commands/`
+3. Copy 6 slash commands to `~/.claude/commands/`
 4. Set up intelligence CLI
-5. Configure all components
+5. Install PROJECT_INDEX scripts
+6. Configure hooks for auto-indexing
+7. Configure all components
 
 **Requirements:**
-- Node.js ≥18
-- Claude Code with subagent support
-- macOS or Linux
+- Node.js ≥18 (required)
+- Claude Code with subagent support (required)
+- macOS or Linux (required)
 - git and jq (for installation)
+- Python ≥3.8 (recommended for PROJECT_INDEX)
 
 ## Verify Installation
 
@@ -232,7 +251,7 @@ Execute pre-defined analysis sequences:
 > Update the intelligence system
 
 # Or reinstall
-curl -fsSL https://raw.githubusercontent.com/simonpierreboucher0/intelligence-system/main/install.sh | bash
+curl -fsSL https://raw.githubusercontent.com/yangsi7/intelligence-system/main/install.sh | bash
 ```
 
 ### Common Issues
@@ -366,5 +385,5 @@ For issues or questions:
 
 Get started now:
 ```bash
-curl -fsSL https://raw.githubusercontent.com/simonpierreboucher0/intelligence-system/main/install.sh | bash
+curl -fsSL https://raw.githubusercontent.com/yangsi7/intelligence-system/main/install.sh | bash
 ```
