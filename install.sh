@@ -161,7 +161,7 @@ if [[ -f "$SCRIPT_DIR/.claude/improved_intelligence/code-intel.mjs" || -f "$SCRI
 else
     # Clone from GitHub
     echo "Cloning from GitHub..."
-    git clone --depth 1 https://github.com/simonpierreboucher0/intelligence-system.git "$INSTALL_DIR"
+    git clone --depth 1 https://github.com/yangsi7/intelligence-system.git "$INSTALL_DIR"
 
     # Reorganize structure (move .claude/* to root of install dir)
     if [[ -d "$INSTALL_DIR/.claude" ]]; then
