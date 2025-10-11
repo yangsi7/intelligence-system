@@ -5,6 +5,60 @@ All notable changes to the Ultimate Intelligence System will be documented in th
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.2.1] - 2025-10-12
+
+### Added
+- **Project CLAUDE.md Integration System**
+  - Automatic integration of usage guide into project CLAUDE.md files
+  - New `/integrate` slash command for on-demand integration
+  - Smart integration script with idempotency checks
+  - Import-based integration (minimal, always up-to-date)
+  - Inline integration option (self-contained)
+  - Interactive and non-interactive modes
+  - Comprehensive integration guide (INTEGRATION_GUIDE.md)
+- **Usage Template** (.claude/USAGE_TEMPLATE.md)
+  - Concise usage guide (~500 tokens)
+  - Quick start instructions
+  - Essential file references using @ imports
+  - Critical DO/DON'T patterns
+  - Common workflow examples
+  - Agent invocation best practices
+- **Installation Enhancements**
+  - Optional project integration during install
+  - User prompt for integration location
+  - Automatic detection of existing integrations
+  - Non-destructive backup before modifications
+
+### Changed
+- Slash command count: 6 → 7 (added `/integrate`)
+- install.sh now offers optional project integration
+- Installation output updated with integration quick start
+- Template file automatically copied to .claude/ directory during install
+
+### Features
+- **Smart Integration Detection**: Prevents duplicate integrations
+- **Hierarchical Support**: Works with root CLAUDE.md and .claude/CLAUDE.md
+- **Idempotent Operations**: Safe to run integration multiple times
+- **Version Markers**: Inline integrations tagged with version and date
+- **Flexible Methods**: Choose between import reference or inline content
+- **Team-Friendly**: Import method works for teams (each member installs system)
+- **Self-Documented**: Inline method works without installation
+
+### Documentation
+- INTEGRATION_GUIDE.md with comprehensive scenarios
+- Integration troubleshooting section
+- FAQ for common integration questions
+- Manual integration instructions
+- Multiple workflow examples
+
+### Technical Details
+- Integration script: scripts/integrate_claude_md.sh
+- Slash command: .claude/commands/integrate.md
+- Template location: .claude/USAGE_TEMPLATE.md
+- Supports 4 integration scenarios (no CLAUDE.md, root, .claude/, existing)
+- Non-destructive: Creates backups before any modifications
+- Exit codes: 0 (success/already integrated), 1 (error)
+
 ## [1.2.0] - 2025-10-11
 
 ### Added

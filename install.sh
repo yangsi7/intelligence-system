@@ -145,6 +145,12 @@ if [[ -f "$SCRIPT_DIR/.claude/improved_intelligence/code-intel.mjs" || -f "$SCRI
         if [[ -f "$SCRIPT_DIR/.claude/ORCHESTRATOR_SELECTION_GUIDE.md" ]]; then
             cp "$SCRIPT_DIR/.claude/ORCHESTRATOR_SELECTION_GUIDE.md" "$INSTALL_DIR/" 2>/dev/null || true
         fi
+
+        # Copy usage template (for project integration)
+        if [[ -f "$SCRIPT_DIR/.claude/USAGE_TEMPLATE.md" ]]; then
+            mkdir -p "$INSTALL_DIR/.claude"
+            cp "$SCRIPT_DIR/.claude/USAGE_TEMPLATE.md" "$INSTALL_DIR/.claude/" 2>/dev/null || true
+        fi
     fi
 
     # Copy PROJECT_INDEX scripts
@@ -184,6 +190,9 @@ else
         if [[ -f "$INSTALL_DIR/.claude/ORCHESTRATOR_SELECTION_GUIDE.md" ]]; then
             mv "$INSTALL_DIR/.claude/ORCHESTRATOR_SELECTION_GUIDE.md" "$INSTALL_DIR/" 2>/dev/null || true
         fi
+
+        # Keep USAGE_TEMPLATE.md in .claude/ for project integration
+        # (Don't move it - it needs to stay in .claude/)
     fi
 
     # Ensure scripts directory exists
@@ -337,6 +346,43 @@ else
     echo "⚠️  No commands directory found, skipping command installation"
 fi
 
+# Optional: Project CLAUDE.md Integration
+echo ""
+echo "=========================================="
+echo "📝 Project Integration (Optional)"
+echo "=========================================="
+echo ""
+echo "The Intelligence System can add usage instructions to your"
+echo "project's CLAUDE.md file for easy reference during development."
+echo ""
+
+if [ -t 0 ]; then
+    # Interactive mode
+    read -p "Integrate into a project now? (y/N): " -n 1 -r
+    echo ""
+    if [[ $REPLY =~ ^[Yy]$ ]]; then
+        read -p "Enter project directory (default: current directory): " PROJECT_DIR
+        PROJECT_DIR="${PROJECT_DIR:-.}"
+
+        if "$INSTALL_DIR/scripts/integrate_claude_md.sh" "$PROJECT_DIR"; then
+            echo ""
+            echo "✓ Project integration complete"
+        else
+            echo ""
+            echo "⚠️  Integration failed, but you can retry later with:"
+            echo "   /integrate (in Claude Code)"
+            echo "   or: $INSTALL_DIR/scripts/integrate_claude_md.sh /path/to/project"
+        fi
+    fi
+else
+    # Non-interactive mode - show manual integration instructions
+    echo "ℹ️  To integrate into a project later:"
+    echo "   • Use slash command: /integrate"
+    echo "   • Or run: $INSTALL_DIR/scripts/integrate_claude_md.sh /path/to/project"
+fi
+
+echo ""
+
 # Test installation
 echo ""
 echo "Testing installation..."
@@ -358,12 +404,13 @@ echo "🤖 Installed Components:"
 echo "   • 3 Orchestrator patterns (meta, normal, integrated)"
 echo "   • 7 Specialized agents (orchestrator, researcher, implementor, reviewer, tester, postflight, index-analyzer)"
 echo "   • 1 System installer agent (for verification/repair)"
-echo "   • 6 Slash commands (/intel, /orchestrate, /search, /validate, /workflow, /index)"
+echo "   • 7 Slash commands (/intel, /orchestrate, /search, /validate, /workflow, /index, /integrate)"
 echo "   • Intelligence CLI (29+ commands)"
 echo "   • PROJECT_INDEX integration (auto-indexing with -i flag)"
 echo "   • 6 Workflow definitions"
 echo ""
 echo "🚀 Quick Start:"
+echo "   • Integrate into project: /integrate"
 echo "   • Create project index: /index"
 echo "   • Use -i flag: 'fix auth bug -i'"
 echo "   • Verify installation: 'Verify my intelligence system'"
