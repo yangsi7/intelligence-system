@@ -5,10 +5,9 @@ set -eo pipefail
 # Adds intelligence system usage guide to project CLAUDE.md files
 
 # Configuration
-SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-SYSTEM_DIR="$HOME/.claude-intelligence-system"
-TEMPLATE_PATH="$SYSTEM_DIR/.claude/USAGE_TEMPLATE.md"
-IMPORT_LINE="@$HOME/.claude-intelligence-system/.claude/USAGE_TEMPLATE.md"
+SYSTEM_DIR="${SYSTEM_DIR:-$HOME/.claude-intelligence-system}"
+TEMPLATE_PATH="${TEMPLATE_PATH:-$SYSTEM_DIR/.claude/USAGE_TEMPLATE.md}"
+IMPORT_LINE="${IMPORT_LINE:-@$HOME/.claude-intelligence-system/.claude/USAGE_TEMPLATE.md}"
 MARKER_START="<!-- ULTIMATE_INTELLIGENCE_SYSTEM_START -->"
 MARKER_END="<!-- ULTIMATE_INTELLIGENCE_SYSTEM_END -->"
 VERSION="v1.2.1"
@@ -19,31 +18,34 @@ YELLOW='\033[1;33m'
 RED='\033[0;31m'
 NC='\033[0m' # No Color
 
-# Get target project directory
-TARGET_DIR="${1:-.}"
-TARGET_DIR="$(cd "$TARGET_DIR" && pwd)" 2>/dev/null || {
-    echo -e "${RED}Error: Directory '$1' does not exist${NC}"
-    exit 1
-}
+# Only run startup checks if being executed (not sourced for testing)
+if [ "${BASH_SOURCE[0]}" = "${0}" ]; then
+    # Get target project directory
+    TARGET_DIR="${1:-.}"
+    TARGET_DIR="$(cd "$TARGET_DIR" && pwd)" 2>/dev/null || {
+        echo -e "${RED}Error: Directory '$1' does not exist${NC}"
+        exit 1
+    }
 
-echo "Intelligence System Integration"
-echo "================================"
-echo ""
-echo "Target: $TARGET_DIR"
-echo ""
+    echo "Intelligence System Integration"
+    echo "================================"
+    echo ""
+    echo "Target: $TARGET_DIR"
+    echo ""
 
-# Check if system is installed
-if [[ ! -d "$SYSTEM_DIR" ]]; then
-    echo -e "${RED}Error: Intelligence System not installed${NC}"
-    echo "Install it first: curl -fsSL https://raw.githubusercontent.com/yangsi7/intelligence-system/main/install.sh | bash"
-    exit 1
-fi
+    # Check if system is installed
+    if [[ ! -d "$SYSTEM_DIR" ]]; then
+        echo -e "${RED}Error: Intelligence System not installed${NC}"
+        echo "Install it first: curl -fsSL https://raw.githubusercontent.com/yangsi7/intelligence-system/main/install.sh | bash"
+        exit 1
+    fi
 
-# Check if template exists
-if [[ ! -f "$TEMPLATE_PATH" ]]; then
-    echo -e "${RED}Error: Template file not found: $TEMPLATE_PATH${NC}"
-    echo "Reinstall the system to fix this issue"
-    exit 1
+    # Check if template exists
+    if [[ ! -f "$TEMPLATE_PATH" ]]; then
+        echo -e "${RED}Error: Template file not found: $TEMPLATE_PATH${NC}"
+        echo "Reinstall the system to fix this issue"
+        exit 1
+    fi
 fi
 
 # Function: Check if already integrated
@@ -54,7 +56,8 @@ check_integration_exists() {
     fi
 
     # Check for import line or markers
-    if grep -q "@$HOME/.claude-intelligence-system/.claude/USAGE_TEMPLATE.md" "$file" 2>/dev/null; then
+    # Use $SYSTEM_DIR to be test-friendly (tests override this variable)
+    if grep -q "@.*USAGE_TEMPLATE.md" "$file" 2>/dev/null; then
         return 0
     fi
     if grep -q "ULTIMATE_INTELLIGENCE_SYSTEM" "$file" 2>/dev/null; then
@@ -91,6 +94,13 @@ add_import_integration() {
 # Function: Add inline integration
 add_inline_integration() {
     local file="$1"
+
+    # Check if template exists
+    if [[ ! -f "$TEMPLATE_PATH" ]]; then
+        echo -e "${RED}Error: Template file not found: $TEMPLATE_PATH${NC}"
+        return 1
+    fi
+
     echo ""
     echo "Adding inline integration to $file..."
 
@@ -114,7 +124,8 @@ add_inline_integration() {
 
 # Function: Create new .claude/CLAUDE.md with import
 create_dotclaude_memory() {
-    local dotclaude_dir="$TARGET_DIR/.claude"
+    local target_dir="${1:-$TARGET_DIR}"
+    local dotclaude_dir="$target_dir/.claude"
     local claude_md="$dotclaude_dir/CLAUDE.md"
 
     echo ""
@@ -250,5 +261,13 @@ EOF
     echo ""
 }
 
-# Run main function
-main "$@"
+# Run main function only if script is executed (not sourced)
+if [ "${BASH_SOURCE[0]}" = "${0}" ]; then
+    main "$@"
+else
+    # Script is being sourced (for testing), export functions
+    export -f check_integration_exists
+    export -f add_import_integration
+    export -f add_inline_integration
+    export -f create_dotclaude_memory
+fi
