@@ -1,0 +1,257 @@
+{
+  "sessionId": "b8e4d9f3-0c2e-5a7f-9d3b-2e6f0a9c4d8f",
+  "timestamp": "2025-10-12T10:00:00Z",
+  "events": [
+    {
+      "id": "evt_001",
+      "timestamp": "2025-10-12T10:00:00Z",
+      "eventType": "session_started",
+      "severity": "info",
+      "actor": "main_agent",
+      "description": "Session started for performance bottleneck investigation",
+      "details": {
+        "orchestratorType": "integrated",
+        "intelligenceLevel": "extended"
+      }
+    },
+    {
+      "id": "evt_002",
+      "timestamp": "2025-10-12T10:06:00Z",
+      "eventType": "phase_started",
+      "severity": "info",
+      "actor": "orchestrator",
+      "description": "Analysis phase started (intelligence gathering)",
+      "details": {
+        "phaseId": "Analysis"
+      }
+    },
+    {
+      "id": "evt_003",
+      "timestamp": "2025-10-12T10:06:30Z",
+      "eventType": "intelligence_started",
+      "severity": "info",
+      "actor": "agent_intel_001",
+      "description": "Started compact intelligence analysis",
+      "details": {
+        "preset": "compact"
+      }
+    },
+    {
+      "id": "evt_004",
+      "timestamp": "2025-10-12T10:08:00Z",
+      "eventType": "intelligence_completed",
+      "severity": "info",
+      "actor": "agent_intel_001",
+      "description": "Completed compact analysis - identified suspicious /api directory",
+      "details": {
+        "preset": "compact",
+        "tokensUsed": 2000,
+        "duration": 90
+      }
+    },
+    {
+      "id": "evt_005",
+      "timestamp": "2025-10-12T10:08:10Z",
+      "eventType": "intelligence_started",
+      "severity": "info",
+      "actor": "agent_intel_001",
+      "description": "Started standard intelligence analysis with hotspot detection",
+      "details": {
+        "preset": "standard"
+      }
+    },
+    {
+      "id": "evt_006",
+      "timestamp": "2025-10-12T10:12:00Z",
+      "eventType": "intelligence_completed",
+      "severity": "info",
+      "actor": "agent_intel_001",
+      "description": "Completed standard analysis - identified data.ts and search.ts as hotspots",
+      "details": {
+        "preset": "standard",
+        "tokensUsed": 8000,
+        "hotspotsFound": 20,
+        "topHotspots": ["src/api/data.ts", "src/api/search.ts"]
+      }
+    },
+    {
+      "id": "evt_007",
+      "timestamp": "2025-10-12T10:12:10Z",
+      "eventType": "intelligence_started",
+      "severity": "info",
+      "actor": "agent_intel_001",
+      "description": "Started extended intelligence analysis scoped to /api",
+      "details": {
+        "preset": "extended",
+        "scope": "/api"
+      }
+    },
+    {
+      "id": "evt_008",
+      "timestamp": "2025-10-12T10:20:00Z",
+      "eventType": "intelligence_completed",
+      "severity": "info",
+      "actor": "agent_intel_001",
+      "description": "Completed extended analysis - found N+1 queries, missing indexes, inefficient serialization",
+      "details": {
+        "preset": "extended",
+        "tokensUsed": 15000,
+        "patternsDetected": ["n_plus_one", "missing_indexes", "inefficient_serialization"]
+      }
+    },
+    {
+      "id": "evt_009",
+      "timestamp": "2025-10-12T10:20:10Z",
+      "eventType": "intelligence_started",
+      "severity": "info",
+      "actor": "agent_intel_001",
+      "description": "Started graph analysis for circular dependencies",
+      "details": {
+        "analysisType": "graph"
+      }
+    },
+    {
+      "id": "evt_010",
+      "timestamp": "2025-10-12T10:23:00Z",
+      "eventType": "intelligence_completed",
+      "severity": "info",
+      "actor": "agent_intel_001",
+      "description": "Completed graph analysis - found 1 circular dependency",
+      "details": {
+        "analysisType": "graph",
+        "tokensUsed": 3000,
+        "cyclesFound": 1
+      }
+    },
+    {
+      "id": "evt_011",
+      "timestamp": "2025-10-12T10:23:05Z",
+      "eventType": "phase_completed",
+      "severity": "info",
+      "actor": "orchestrator",
+      "description": "Analysis phase completed - 5 critical findings documented",
+      "details": {
+        "phaseId": "Analysis",
+        "duration": 1020,
+        "totalTokens": 28000,
+        "findingsCount": 5
+      }
+    },
+    {
+      "id": "evt_012",
+      "timestamp": "2025-10-12T10:30:00Z",
+      "eventType": "phase_completed",
+      "severity": "info",
+      "actor": "orchestrator",
+      "description": "Research phase completed - validated findings against industry best practices",
+      "details": {
+        "phaseId": "Research",
+        "duration": 420
+      }
+    },
+    {
+      "id": "evt_013",
+      "timestamp": "2025-10-12T10:35:00Z",
+      "eventType": "decision_made",
+      "severity": "info",
+      "actor": "orchestrator",
+      "description": "Selected 3 quick-win optimizations over caching layer",
+      "details": {
+        "selectedApproaches": ["fix_n_plus_one", "add_indexes", "optimize_serialization"],
+        "deferredApproaches": ["caching_layer"],
+        "estimatedEffort": 40,
+        "expectedImprovement": 90
+      }
+    },
+    {
+      "id": "evt_014",
+      "timestamp": "2025-10-12T10:45:00Z",
+      "eventType": "agent_launched",
+      "severity": "info",
+      "actor": "orchestrator",
+      "description": "Launched 3 implementor agents in parallel for Wave 1",
+      "details": {
+        "agentIds": ["agent_implementor_001", "agent_implementor_002", "agent_implementor_003"],
+        "wave": 1
+      }
+    },
+    {
+      "id": "evt_015",
+      "timestamp": "2025-10-12T11:00:00Z",
+      "eventType": "agent_completed",
+      "severity": "info",
+      "actor": "orchestrator",
+      "description": "All Wave 1 implementors completed successfully",
+      "details": {
+        "wave": 1,
+        "duration": 900
+      }
+    },
+    {
+      "id": "evt_016",
+      "timestamp": "2025-10-12T11:22:00Z",
+      "eventType": "agent_completed",
+      "severity": "info",
+      "actor": "orchestrator",
+      "description": "Performance benchmarks completed - 90%+ improvement achieved",
+      "details": {
+        "benchmarkResults": {
+          "data_endpoint_improvement": "96%",
+          "search_endpoint_improvement": "87%"
+        }
+      }
+    },
+    {
+      "id": "evt_017",
+      "timestamp": "2025-10-12T11:25:00Z",
+      "eventType": "quality_gate_passed",
+      "severity": "info",
+      "actor": "orchestrator",
+      "description": "Review quality gate passed - zero regressions, performance targets exceeded",
+      "details": {
+        "criteria": ["no_regressions", "performance_targets_met", "test_coverage_maintained"]
+      }
+    },
+    {
+      "id": "evt_018",
+      "timestamp": "2025-10-12T11:30:00Z",
+      "eventType": "session_ended",
+      "severity": "info",
+      "actor": "main_agent",
+      "description": "Session completed successfully - 90%+ performance improvement",
+      "details": {
+        "totalDuration": 5400,
+        "tokensUsed": 48000,
+        "intelligenceTokens": 28000,
+        "implementationTokens": 20000,
+        "success": true
+      }
+    }
+  ],
+  "summary": {
+    "totalEvents": 18,
+    "eventsByType": {
+      "session_started": 1,
+      "session_ended": 1,
+      "phase_started": 2,
+      "phase_completed": 3,
+      "intelligence_started": 4,
+      "intelligence_completed": 4,
+      "decision_made": 1,
+      "agent_launched": 1,
+      "agent_completed": 2,
+      "quality_gate_passed": 1
+    },
+    "eventsBySeverity": {
+      "info": 18,
+      "warning": 0,
+      "error": 0
+    },
+    "totalErrors": 0,
+    "totalWarnings": 0
+  },
+  "metadata": {
+    "lastEventAt": "2025-10-12T11:30:00Z",
+    "version": "1.0.0"
+  }
+}

@@ -1,0 +1,167 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Todo Session Template",
+  "description": "Template for tracking todos and task completion across agents",
+  "type": "object",
+  "properties": {
+    "sessionId": {
+      "type": "string",
+      "format": "uuid",
+      "description": "Session ID matching planning-session.json"
+    },
+    "timestamp": {
+      "type": "string",
+      "format": "date-time",
+      "description": "ISO-8601 timestamp of creation"
+    },
+    "todos": {
+      "type": "array",
+      "description": "List of all todos for this session",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "description": "Unique todo identifier"
+          },
+          "content": {
+            "type": "string",
+            "description": "Todo description in imperative form (e.g., 'Run tests')"
+          },
+          "activeForm": {
+            "type": "string",
+            "description": "Present continuous form shown during execution (e.g., 'Running tests')"
+          },
+          "status": {
+            "type": "string",
+            "enum": ["pending", "in_progress", "completed", "failed"],
+            "description": "Current todo status"
+          },
+          "assignedAgent": {
+            "type": "string",
+            "description": "Agent responsible for this todo (main, orchestrator, researcher, implementor, reviewer, tester, postflight, or custom)"
+          },
+          "assignedAgentId": {
+            "type": "string",
+            "description": "Specific agent instance ID (e.g., agent_2) if applicable"
+          },
+          "dependencies": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "format": "uuid",
+              "description": "UUIDs of todos that must complete before this one"
+            },
+            "description": "Todo dependencies"
+          },
+          "relatedTask": {
+            "type": "string",
+            "pattern": "^task_[0-9]+$",
+            "description": "Reference to task in planning-session.json"
+          },
+          "priority": {
+            "type": "string",
+            "enum": ["critical", "high", "medium", "low"],
+            "default": "medium",
+            "description": "Todo priority level"
+          },
+          "estimatedTokens": {
+            "type": "integer",
+            "description": "Estimated token cost for this todo"
+          },
+          "actualTokens": {
+            "type": "integer",
+            "description": "Actual tokens used (filled after completion)"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time",
+            "description": "When todo was created"
+          },
+          "startedAt": {
+            "type": "string",
+            "format": "date-time",
+            "description": "When todo status changed to in_progress"
+          },
+          "completedAt": {
+            "type": "string",
+            "format": "date-time",
+            "description": "When todo status changed to completed"
+          },
+          "failedAt": {
+            "type": "string",
+            "format": "date-time",
+            "description": "When todo status changed to failed"
+          },
+          "errorMessage": {
+            "type": "string",
+            "description": "Error details if status is failed"
+          },
+          "notes": {
+            "type": "string",
+            "description": "Additional notes or context"
+          },
+          "tags": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Tags for categorization"
+          }
+        },
+        "required": ["id", "content", "activeForm", "status", "assignedAgent", "dependencies", "createdAt"]
+      }
+    },
+    "summary": {
+      "type": "object",
+      "description": "Summary statistics",
+      "properties": {
+        "total": {
+          "type": "integer",
+          "description": "Total number of todos"
+        },
+        "completed": {
+          "type": "integer",
+          "description": "Number of completed todos"
+        },
+        "inProgress": {
+          "type": "integer",
+          "description": "Number of in-progress todos"
+        },
+        "pending": {
+          "type": "integer",
+          "description": "Number of pending todos"
+        },
+        "failed": {
+          "type": "integer",
+          "description": "Number of failed todos"
+        },
+        "completionPercentage": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 100,
+          "description": "Percentage of todos completed"
+        }
+      }
+    },
+    "metadata": {
+      "type": "object",
+      "properties": {
+        "lastUpdatedAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "lastUpdatedBy": {
+          "type": "string",
+          "description": "Agent that last updated this file"
+        },
+        "version": {
+          "type": "string",
+          "default": "1.0.0"
+        }
+      }
+    }
+  },
+  "required": ["sessionId", "timestamp", "todos"]
+}

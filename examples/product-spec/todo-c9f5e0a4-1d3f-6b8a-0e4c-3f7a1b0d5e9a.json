@@ -1,0 +1,163 @@
+{
+  "sessionId": "c9f5e0a4-1d3f-6b8a-0e4c-3f7a1b0d5e9a",
+  "timestamp": "2025-10-12T08:18:00Z",
+  "todos": [
+    {
+      "id": "todo_001",
+      "content": "Define product vision and market opportunity",
+      "activeForm": "Defining product vision",
+      "status": "completed",
+      "assignedAgent": "product_strategy_analyst",
+      "assignedAgentId": "agent_psa_001",
+      "wave": 1,
+      "completedAt": "2025-10-12T08:45:00Z"
+    },
+    {
+      "id": "todo_002",
+      "content": "Research competitive landscape (Google, Algolia, Elasticsearch)",
+      "activeForm": "Researching competitors",
+      "status": "completed",
+      "assignedAgent": "product_strategy_analyst",
+      "assignedAgentId": "agent_psa_001",
+      "wave": 1,
+      "completedAt": "2025-10-12T09:00:00Z"
+    },
+    {
+      "id": "todo_003",
+      "content": "Create 3 user personas for AI search feature",
+      "activeForm": "Creating user personas",
+      "status": "completed",
+      "assignedAgent": "ux_researcher",
+      "assignedAgentId": "agent_uxr_001",
+      "wave": 1,
+      "completedAt": "2025-10-12T08:50:00Z"
+    },
+    {
+      "id": "todo_004",
+      "content": "Design user journey maps for search workflows",
+      "activeForm": "Designing journey maps",
+      "status": "completed",
+      "assignedAgent": "ux_researcher",
+      "assignedAgentId": "agent_uxr_001",
+      "wave": 1,
+      "completedAt": "2025-10-12T09:05:00Z"
+    },
+    {
+      "id": "todo_005",
+      "content": "Evaluate AI/ML technologies (OpenAI, Cohere, self-hosted)",
+      "activeForm": "Evaluating AI technologies",
+      "status": "completed",
+      "assignedAgent": "technical_architect",
+      "assignedAgentId": "agent_ta_001",
+      "wave": 2,
+      "completedAt": "2025-10-12T09:25:00Z"
+    },
+    {
+      "id": "todo_006",
+      "content": "Design system architecture with vector database",
+      "activeForm": "Designing system architecture",
+      "status": "completed",
+      "assignedAgent": "technical_architect",
+      "assignedAgentId": "agent_ta_001",
+      "wave": 2,
+      "completedAt": "2025-10-12T09:40:00Z"
+    },
+    {
+      "id": "todo_007",
+      "content": "Define 45 functional requirements with acceptance criteria",
+      "activeForm": "Defining functional requirements",
+      "status": "completed",
+      "assignedAgent": "requirements_engineer",
+      "assignedAgentId": "agent_re_001",
+      "wave": 2,
+      "completedAt": "2025-10-12T09:35:00Z"
+    },
+    {
+      "id": "todo_008",
+      "content": "Define 15 non-functional requirements (performance, security, scalability)",
+      "activeForm": "Defining non-functional requirements",
+      "status": "completed",
+      "assignedAgent": "requirements_engineer",
+      "assignedAgentId": "agent_re_001",
+      "wave": 2,
+      "completedAt": "2025-10-12T09:45:00Z"
+    },
+    {
+      "id": "todo_009",
+      "content": "Write executive summary and product vision sections",
+      "activeForm": "Writing executive summary",
+      "status": "completed",
+      "assignedAgent": "product_strategy_analyst",
+      "assignedAgentId": "agent_psa_001",
+      "wave": 3,
+      "completedAt": "2025-10-12T10:05:00Z"
+    },
+    {
+      "id": "todo_010",
+      "content": "Write user research section with personas and journeys",
+      "activeForm": "Writing user research section",
+      "status": "completed",
+      "assignedAgent": "ux_researcher",
+      "assignedAgentId": "agent_uxr_001",
+      "wave": 3,
+      "completedAt": "2025-10-12T10:10:00Z"
+    },
+    {
+      "id": "todo_011",
+      "content": "Write technical architecture section with diagrams",
+      "activeForm": "Writing architecture section",
+      "status": "completed",
+      "assignedAgent": "technical_architect",
+      "assignedAgentId": "agent_ta_001",
+      "wave": 3,
+      "completedAt": "2025-10-12T10:15:00Z"
+    },
+    {
+      "id": "todo_012",
+      "content": "Write requirements sections (functional + non-functional)",
+      "activeForm": "Writing requirements sections",
+      "status": "completed",
+      "assignedAgent": "requirements_engineer",
+      "assignedAgentId": "agent_re_001",
+      "wave": 3,
+      "completedAt": "2025-10-12T10:20:00Z"
+    },
+    {
+      "id": "todo_013",
+      "content": "Create 6-month implementation roadmap",
+      "activeForm": "Creating implementation roadmap",
+      "status": "completed",
+      "assignedAgent": "technical_architect",
+      "assignedAgentId": "agent_ta_001",
+      "wave": 3,
+      "completedAt": "2025-10-12T10:25:00Z"
+    },
+    {
+      "id": "todo_014",
+      "content": "Integrate all spec sections into final 45-page document",
+      "activeForm": "Integrating specification sections",
+      "status": "completed",
+      "assignedAgent": "integrator",
+      "assignedAgentId": "agent_integrator_001",
+      "wave": 4,
+      "completedAt": "2025-10-12T10:35:00Z"
+    }
+  ],
+  "summary": {
+    "total": 14,
+    "completed": 14,
+    "inProgress": 0,
+    "pending": 0,
+    "failed": 0,
+    "byAgent": {
+      "product_strategy_analyst": 3,
+      "ux_researcher": 3,
+      "technical_architect": 4,
+      "requirements_engineer": 3,
+      "integrator": 1
+    }
+  },
+  "metadata": {
+    "version": "1.0.0"
+  }
+}

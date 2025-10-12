@@ -1,0 +1,222 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Event Stream Session Template",
+  "description": "Template for tracking all significant events during session execution",
+  "type": "object",
+  "properties": {
+    "sessionId": {
+      "type": "string",
+      "format": "uuid",
+      "description": "Session ID matching planning-session.json"
+    },
+    "timestamp": {
+      "type": "string",
+      "format": "date-time",
+      "description": "ISO-8601 timestamp of creation"
+    },
+    "events": {
+      "type": "array",
+      "description": "Chronological list of all events",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "description": "Unique event identifier"
+          },
+          "timestamp": {
+            "type": "string",
+            "format": "date-time",
+            "description": "When event occurred"
+          },
+          "eventType": {
+            "type": "string",
+            "enum": [
+              "session_started",
+              "session_ended",
+              "phase_started",
+              "phase_completed",
+              "agent_launched",
+              "agent_completed",
+              "agent_failed",
+              "task_started",
+              "task_completed",
+              "task_failed",
+              "todo_created",
+              "todo_updated",
+              "todo_completed",
+              "todo_failed",
+              "intelligence_started",
+              "intelligence_completed",
+              "workbook_entry_added",
+              "error_occurred",
+              "warning_issued",
+              "quality_gate_passed",
+              "quality_gate_failed",
+              "decision_made",
+              "file_created",
+              "file_modified",
+              "file_deleted",
+              "user_input_received",
+              "output_delivered"
+            ],
+            "description": "Type of event"
+          },
+          "severity": {
+            "type": "string",
+            "enum": ["debug", "info", "warning", "error", "critical"],
+            "default": "info",
+            "description": "Event severity level"
+          },
+          "actor": {
+            "type": "string",
+            "description": "Who/what triggered the event (main, orchestrator, agent_X, system, user)"
+          },
+          "description": {
+            "type": "string",
+            "description": "Human-readable event description"
+          },
+          "details": {
+            "type": "object",
+            "description": "Event-specific details",
+            "properties": {
+              "agentId": {
+                "type": "string",
+                "description": "Agent ID if event involves an agent"
+              },
+              "agentType": {
+                "type": "string",
+                "description": "Type of agent (researcher, implementor, etc.)"
+              },
+              "taskId": {
+                "type": "string",
+                "pattern": "^task_[0-9]+$",
+                "description": "Task ID if event relates to a task"
+              },
+              "todoId": {
+                "type": "string",
+                "format": "uuid",
+                "description": "Todo ID if event relates to a todo"
+              },
+              "phaseId": {
+                "type": "string",
+                "description": "Phase name if event relates to a phase"
+              },
+              "filePath": {
+                "type": "string",
+                "description": "File path if event involves a file operation"
+              },
+              "errorMessage": {
+                "type": "string",
+                "description": "Error message if event is an error"
+              },
+              "stackTrace": {
+                "type": "string",
+                "description": "Stack trace if available"
+              },
+              "tokensUsed": {
+                "type": "integer",
+                "description": "Tokens used in this operation"
+              },
+              "duration": {
+                "type": "number",
+                "description": "Duration in seconds"
+              },
+              "success": {
+                "type": "boolean",
+                "description": "Whether operation succeeded"
+              },
+              "metadata": {
+                "type": "object",
+                "description": "Additional event-specific metadata"
+              }
+            }
+          },
+          "relatedEvents": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "description": "IDs of related events"
+          },
+          "tags": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Tags for categorization"
+          }
+        },
+        "required": ["id", "timestamp", "eventType", "actor", "description"]
+      }
+    },
+    "summary": {
+      "type": "object",
+      "description": "Event statistics",
+      "properties": {
+        "totalEvents": {
+          "type": "integer"
+        },
+        "eventsByType": {
+          "type": "object",
+          "patternProperties": {
+            ".*": {
+              "type": "integer"
+            }
+          }
+        },
+        "eventsBySeverity": {
+          "type": "object",
+          "properties": {
+            "debug": {
+              "type": "integer"
+            },
+            "info": {
+              "type": "integer"
+            },
+            "warning": {
+              "type": "integer"
+            },
+            "error": {
+              "type": "integer"
+            },
+            "critical": {
+              "type": "integer"
+            }
+          }
+        },
+        "totalErrors": {
+          "type": "integer"
+        },
+        "totalWarnings": {
+          "type": "integer"
+        },
+        "agentsLaunched": {
+          "type": "integer"
+        },
+        "agentsCompleted": {
+          "type": "integer"
+        },
+        "agentsFailed": {
+          "type": "integer"
+        }
+      }
+    },
+    "metadata": {
+      "type": "object",
+      "properties": {
+        "lastEventAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "version": {
+          "type": "string",
+          "default": "1.0.0"
+        }
+      }
+    }
+  },
+  "required": ["sessionId", "timestamp", "events"]
+}

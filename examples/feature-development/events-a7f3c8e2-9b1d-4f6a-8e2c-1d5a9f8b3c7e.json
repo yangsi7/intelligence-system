@@ -1,0 +1,690 @@
+{
+  "sessionId": "a7f3c8e2-9b1d-4f6a-8e2c-1d5a9f8b3c7e",
+  "timestamp": "2025-10-12T14:30:00Z",
+  "events": [
+    {
+      "id": "evt_001",
+      "timestamp": "2025-10-12T14:30:00Z",
+      "eventType": "session_started",
+      "severity": "info",
+      "actor": "main_agent",
+      "description": "Session started for password reset feature implementation",
+      "details": {
+        "orchestratorType": "normal",
+        "taskComplexity": "medium"
+      },
+      "tags": ["lifecycle"]
+    },
+    {
+      "id": "evt_002",
+      "timestamp": "2025-10-12T14:30:05Z",
+      "eventType": "phase_started",
+      "severity": "info",
+      "actor": "main_agent",
+      "description": "Context phase started",
+      "details": {
+        "phaseId": "Context"
+      },
+      "tags": ["phase", "context"]
+    },
+    {
+      "id": "evt_003",
+      "timestamp": "2025-10-12T14:35:00Z",
+      "eventType": "phase_completed",
+      "severity": "info",
+      "actor": "main_agent",
+      "description": "Context phase completed successfully",
+      "details": {
+        "phaseId": "Context",
+        "duration": 295
+      },
+      "tags": ["phase", "context"]
+    },
+    {
+      "id": "evt_004",
+      "timestamp": "2025-10-12T14:35:05Z",
+      "eventType": "phase_started",
+      "severity": "info",
+      "actor": "orchestrator",
+      "description": "Planning phase started",
+      "details": {
+        "phaseId": "Planning"
+      },
+      "tags": ["phase", "planning"]
+    },
+    {
+      "id": "evt_005",
+      "timestamp": "2025-10-12T14:36:00Z",
+      "eventType": "decision_made",
+      "severity": "info",
+      "actor": "orchestrator",
+      "description": "Decomposed feature into 6 tasks across 3 waves",
+      "details": {
+        "totalTasks": 6,
+        "totalWaves": 3,
+        "estimatedDuration": 45
+      },
+      "tags": ["planning", "decomposition"]
+    },
+    {
+      "id": "evt_006",
+      "timestamp": "2025-10-12T14:42:00Z",
+      "eventType": "phase_completed",
+      "severity": "info",
+      "actor": "orchestrator",
+      "description": "Planning phase completed successfully",
+      "details": {
+        "phaseId": "Planning",
+        "duration": 415
+      },
+      "tags": ["phase", "planning"]
+    },
+    {
+      "id": "evt_007",
+      "timestamp": "2025-10-12T14:42:05Z",
+      "eventType": "phase_started",
+      "severity": "info",
+      "actor": "orchestrator",
+      "description": "Execution phase started",
+      "details": {
+        "phaseId": "Execution"
+      },
+      "tags": ["phase", "execution"]
+    },
+    {
+      "id": "evt_008",
+      "timestamp": "2025-10-12T14:42:30Z",
+      "eventType": "agent_launched",
+      "severity": "info",
+      "actor": "orchestrator",
+      "description": "Launched researcher agent for Wave 1",
+      "details": {
+        "agentId": "agent_researcher_001",
+        "agentType": "researcher",
+        "wave": 1,
+        "assignedTasks": ["task_1"]
+      },
+      "tags": ["agent", "launch", "wave_1"]
+    },
+    {
+      "id": "evt_009",
+      "timestamp": "2025-10-12T14:42:30Z",
+      "eventType": "task_started",
+      "severity": "info",
+      "actor": "agent_researcher_001",
+      "description": "Started task_1: Review authentication system",
+      "details": {
+        "taskId": "task_1",
+        "agentId": "agent_researcher_001"
+      },
+      "tags": ["task", "wave_1"]
+    },
+    {
+      "id": "evt_010",
+      "timestamp": "2025-10-12T14:48:00Z",
+      "eventType": "workbook_entry_added",
+      "severity": "info",
+      "actor": "agent_researcher_001",
+      "description": "Added insight: Existing auth system uses JWT",
+      "details": {
+        "entryId": "entry_001",
+        "entryType": "insight"
+      },
+      "tags": ["workbook", "insight"]
+    },
+    {
+      "id": "evt_011",
+      "timestamp": "2025-10-12T14:50:00Z",
+      "eventType": "task_completed",
+      "severity": "info",
+      "actor": "agent_researcher_001",
+      "description": "Completed task_1: Review authentication system",
+      "details": {
+        "taskId": "task_1",
+        "agentId": "agent_researcher_001",
+        "duration": 450
+      },
+      "tags": ["task", "wave_1"]
+    },
+    {
+      "id": "evt_012",
+      "timestamp": "2025-10-12T14:50:05Z",
+      "eventType": "agent_completed",
+      "severity": "info",
+      "actor": "orchestrator",
+      "description": "Wave 1 researcher completed successfully",
+      "details": {
+        "agentId": "agent_researcher_001",
+        "agentType": "researcher",
+        "wave": 1,
+        "success": true
+      },
+      "tags": ["agent", "completion", "wave_1"]
+    },
+    {
+      "id": "evt_013",
+      "timestamp": "2025-10-12T14:50:10Z",
+      "eventType": "agent_launched",
+      "severity": "info",
+      "actor": "orchestrator",
+      "description": "Launched implementor agents for Wave 2 (parallel)",
+      "details": {
+        "agentIds": ["agent_implementor_001", "agent_implementor_002"],
+        "agentType": "implementor",
+        "wave": 2,
+        "assignedTasks": ["task_2", "task_3", "task_4", "task_5", "task_6"]
+      },
+      "tags": ["agent", "launch", "wave_2", "parallel"]
+    },
+    {
+      "id": "evt_014",
+      "timestamp": "2025-10-12T14:50:10Z",
+      "eventType": "task_started",
+      "severity": "info",
+      "actor": "agent_implementor_001",
+      "description": "Started task_2: Design reset token mechanism",
+      "details": {
+        "taskId": "task_2",
+        "agentId": "agent_implementor_001"
+      },
+      "tags": ["task", "wave_2"]
+    },
+    {
+      "id": "evt_015",
+      "timestamp": "2025-10-12T14:50:10Z",
+      "eventType": "task_started",
+      "severity": "info",
+      "actor": "agent_implementor_002",
+      "description": "Started task_4: Integrate email service",
+      "details": {
+        "taskId": "task_4",
+        "agentId": "agent_implementor_002"
+      },
+      "tags": ["task", "wave_2"]
+    },
+    {
+      "id": "evt_016",
+      "timestamp": "2025-10-12T14:52:00Z",
+      "eventType": "workbook_entry_added",
+      "severity": "info",
+      "actor": "agent_implementor_001",
+      "description": "Added decision: Use JWT for reset tokens",
+      "details": {
+        "entryId": "entry_002",
+        "entryType": "decision"
+      },
+      "tags": ["workbook", "decision"]
+    },
+    {
+      "id": "evt_017",
+      "timestamp": "2025-10-12T14:53:00Z",
+      "eventType": "workbook_entry_added",
+      "severity": "info",
+      "actor": "agent_implementor_001",
+      "description": "Added diagram: Token generation flow",
+      "details": {
+        "entryId": "entry_003",
+        "entryType": "diagram"
+      },
+      "tags": ["workbook", "diagram"]
+    },
+    {
+      "id": "evt_018",
+      "timestamp": "2025-10-12T14:56:00Z",
+      "eventType": "task_completed",
+      "severity": "info",
+      "actor": "agent_implementor_001",
+      "description": "Completed task_2: Design reset token mechanism",
+      "details": {
+        "taskId": "task_2",
+        "agentId": "agent_implementor_001",
+        "duration": 350
+      },
+      "tags": ["task", "wave_2"]
+    },
+    {
+      "id": "evt_019",
+      "timestamp": "2025-10-12T14:56:05Z",
+      "eventType": "task_started",
+      "severity": "info",
+      "actor": "agent_implementor_001",
+      "description": "Started task_3: Implement reset request endpoint",
+      "details": {
+        "taskId": "task_3",
+        "agentId": "agent_implementor_001"
+      },
+      "tags": ["task", "wave_2"]
+    },
+    {
+      "id": "evt_020",
+      "timestamp": "2025-10-12T14:58:00Z",
+      "eventType": "workbook_entry_added",
+      "severity": "info",
+      "actor": "agent_implementor_001",
+      "description": "Added insight: Reuse existing rate limiter",
+      "details": {
+        "entryId": "entry_004",
+        "entryType": "insight"
+      },
+      "tags": ["workbook", "insight"]
+    },
+    {
+      "id": "evt_021",
+      "timestamp": "2025-10-12T15:01:00Z",
+      "eventType": "workbook_entry_added",
+      "severity": "info",
+      "actor": "agent_implementor_002",
+      "description": "Added note: Email service configuration",
+      "details": {
+        "entryId": "entry_005",
+        "entryType": "note"
+      },
+      "tags": ["workbook", "note"]
+    },
+    {
+      "id": "evt_022",
+      "timestamp": "2025-10-12T15:02:00Z",
+      "eventType": "task_completed",
+      "severity": "info",
+      "actor": "agent_implementor_001",
+      "description": "Completed task_3: Implement reset request endpoint",
+      "details": {
+        "taskId": "task_3",
+        "agentId": "agent_implementor_001",
+        "duration": 360
+      },
+      "tags": ["task", "wave_2"]
+    },
+    {
+      "id": "evt_023",
+      "timestamp": "2025-10-12T15:02:05Z",
+      "eventType": "task_started",
+      "severity": "info",
+      "actor": "agent_implementor_001",
+      "description": "Started task_6: Add rate limiting",
+      "details": {
+        "taskId": "task_6",
+        "agentId": "agent_implementor_001"
+      },
+      "tags": ["task", "wave_2"]
+    },
+    {
+      "id": "evt_024",
+      "timestamp": "2025-10-12T15:03:00Z",
+      "eventType": "workbook_entry_added",
+      "severity": "info",
+      "actor": "agent_implementor_001",
+      "description": "Added diagram: Rate limiting strategy",
+      "details": {
+        "entryId": "entry_006",
+        "entryType": "diagram"
+      },
+      "tags": ["workbook", "diagram"]
+    },
+    {
+      "id": "evt_025",
+      "timestamp": "2025-10-12T15:04:00Z",
+      "eventType": "task_completed",
+      "severity": "info",
+      "actor": "agent_implementor_002",
+      "description": "Completed task_4: Integrate email service",
+      "details": {
+        "taskId": "task_4",
+        "agentId": "agent_implementor_002",
+        "duration": 830
+      },
+      "tags": ["task", "wave_2"]
+    },
+    {
+      "id": "evt_026",
+      "timestamp": "2025-10-12T15:04:05Z",
+      "eventType": "task_started",
+      "severity": "info",
+      "actor": "agent_implementor_001",
+      "description": "Started task_5: Implement password update endpoint",
+      "details": {
+        "taskId": "task_5",
+        "agentId": "agent_implementor_001"
+      },
+      "tags": ["task", "wave_2"]
+    },
+    {
+      "id": "evt_027",
+      "timestamp": "2025-10-12T15:07:00Z",
+      "eventType": "workbook_entry_added",
+      "severity": "info",
+      "actor": "agent_implementor_001",
+      "description": "Added insight: Token validation at password update only",
+      "details": {
+        "entryId": "entry_007",
+        "entryType": "insight"
+      },
+      "tags": ["workbook", "insight", "security"]
+    },
+    {
+      "id": "evt_028",
+      "timestamp": "2025-10-12T15:08:00Z",
+      "eventType": "task_completed",
+      "severity": "info",
+      "actor": "agent_implementor_001",
+      "description": "Completed task_6: Add rate limiting",
+      "details": {
+        "taskId": "task_6",
+        "agentId": "agent_implementor_001",
+        "duration": 360
+      },
+      "tags": ["task", "wave_2"]
+    },
+    {
+      "id": "evt_029",
+      "timestamp": "2025-10-12T15:10:00Z",
+      "eventType": "task_completed",
+      "severity": "info",
+      "actor": "agent_implementor_001",
+      "description": "Completed task_5: Implement password update endpoint",
+      "details": {
+        "taskId": "task_5",
+        "agentId": "agent_implementor_001",
+        "duration": 360
+      },
+      "tags": ["task", "wave_2"]
+    },
+    {
+      "id": "evt_030",
+      "timestamp": "2025-10-12T15:10:05Z",
+      "eventType": "agent_completed",
+      "severity": "info",
+      "actor": "orchestrator",
+      "description": "Wave 2 implementors completed successfully",
+      "details": {
+        "agentIds": ["agent_implementor_001", "agent_implementor_002"],
+        "agentType": "implementor",
+        "wave": 2,
+        "success": true
+      },
+      "tags": ["agent", "completion", "wave_2"]
+    },
+    {
+      "id": "evt_031",
+      "timestamp": "2025-10-12T15:10:10Z",
+      "eventType": "agent_launched",
+      "severity": "info",
+      "actor": "orchestrator",
+      "description": "Launched reviewer and tester for Wave 3 (parallel)",
+      "details": {
+        "agentIds": ["agent_reviewer_001", "agent_tester_001"],
+        "agentTypes": ["reviewer", "tester"],
+        "wave": 3
+      },
+      "tags": ["agent", "launch", "wave_3", "parallel"]
+    },
+    {
+      "id": "evt_032",
+      "timestamp": "2025-10-12T15:12:00Z",
+      "eventType": "workbook_entry_added",
+      "severity": "info",
+      "actor": "agent_reviewer_001",
+      "description": "Added reflection: TDD approach saved debugging time",
+      "details": {
+        "entryId": "entry_008",
+        "entryType": "reflection"
+      },
+      "tags": ["workbook", "reflection"]
+    },
+    {
+      "id": "evt_033",
+      "timestamp": "2025-10-12T15:14:00Z",
+      "eventType": "workbook_entry_added",
+      "severity": "info",
+      "actor": "agent_reviewer_001",
+      "description": "Added note: Security review findings",
+      "details": {
+        "entryId": "entry_009",
+        "entryType": "note"
+      },
+      "tags": ["workbook", "note", "security"]
+    },
+    {
+      "id": "evt_034",
+      "timestamp": "2025-10-12T15:15:00Z",
+      "eventType": "agent_completed",
+      "severity": "info",
+      "actor": "orchestrator",
+      "description": "Wave 3 reviewer completed successfully",
+      "details": {
+        "agentId": "agent_reviewer_001",
+        "agentType": "reviewer",
+        "wave": 3,
+        "success": true
+      },
+      "tags": ["agent", "completion", "wave_3"]
+    },
+    {
+      "id": "evt_035",
+      "timestamp": "2025-10-12T15:16:00Z",
+      "eventType": "workbook_entry_added",
+      "severity": "info",
+      "actor": "agent_implementor_002",
+      "description": "Added decision: Email template responsive design",
+      "details": {
+        "entryId": "entry_010",
+        "entryType": "decision"
+      },
+      "tags": ["workbook", "decision"]
+    },
+    {
+      "id": "evt_036",
+      "timestamp": "2025-10-12T15:18:00Z",
+      "eventType": "agent_completed",
+      "severity": "info",
+      "actor": "orchestrator",
+      "description": "Wave 3 tester completed successfully - 98% coverage",
+      "details": {
+        "agentId": "agent_tester_001",
+        "agentType": "tester",
+        "wave": 3,
+        "success": true,
+        "testResults": {
+          "total": 15,
+          "passed": 15,
+          "failed": 0,
+          "coverage": 98
+        }
+      },
+      "tags": ["agent", "completion", "wave_3", "testing"]
+    },
+    {
+      "id": "evt_037",
+      "timestamp": "2025-10-12T15:18:05Z",
+      "eventType": "phase_completed",
+      "severity": "info",
+      "actor": "orchestrator",
+      "description": "Execution phase completed successfully",
+      "details": {
+        "phaseId": "Execution",
+        "duration": 2155
+      },
+      "tags": ["phase", "execution"]
+    },
+    {
+      "id": "evt_038",
+      "timestamp": "2025-10-12T15:18:10Z",
+      "eventType": "quality_gate_passed",
+      "severity": "info",
+      "actor": "orchestrator",
+      "description": "Implementation quality gate passed",
+      "details": {
+        "gateName": "Implementation Complete",
+        "criteria": [
+          "All code written following TDD",
+          "Tests passing",
+          "Code follows project patterns"
+        ]
+      },
+      "tags": ["quality_gate", "execution"]
+    },
+    {
+      "id": "evt_039",
+      "timestamp": "2025-10-12T15:18:15Z",
+      "eventType": "phase_started",
+      "severity": "info",
+      "actor": "orchestrator",
+      "description": "Review phase started",
+      "details": {
+        "phaseId": "Review"
+      },
+      "tags": ["phase", "review"]
+    },
+    {
+      "id": "evt_040",
+      "timestamp": "2025-10-12T15:19:00Z",
+      "eventType": "quality_gate_passed",
+      "severity": "info",
+      "actor": "orchestrator",
+      "description": "Review quality gate passed",
+      "details": {
+        "gateName": "Review Complete",
+        "criteria": [
+          "Code review approved",
+          "Test coverage >= 80% (actual: 98%)",
+          "Security review passed"
+        ]
+      },
+      "tags": ["quality_gate", "review"]
+    },
+    {
+      "id": "evt_041",
+      "timestamp": "2025-10-12T15:19:05Z",
+      "eventType": "phase_completed",
+      "severity": "info",
+      "actor": "orchestrator",
+      "description": "Review phase completed successfully",
+      "details": {
+        "phaseId": "Review",
+        "duration": 50
+      },
+      "tags": ["phase", "review"]
+    },
+    {
+      "id": "evt_042",
+      "timestamp": "2025-10-12T15:19:10Z",
+      "eventType": "phase_started",
+      "severity": "info",
+      "actor": "orchestrator",
+      "description": "Delivery phase started",
+      "details": {
+        "phaseId": "Delivery"
+      },
+      "tags": ["phase", "delivery"]
+    },
+    {
+      "id": "evt_043",
+      "timestamp": "2025-10-12T15:20:00Z",
+      "eventType": "file_created",
+      "severity": "info",
+      "actor": "orchestrator",
+      "description": "Created aggregated deliverable",
+      "details": {
+        "filePath": "/workflow/integration/final_deliverable.md"
+      },
+      "tags": ["file", "deliverable"]
+    },
+    {
+      "id": "evt_044",
+      "timestamp": "2025-10-12T15:21:00Z",
+      "eventType": "quality_gate_passed",
+      "severity": "info",
+      "actor": "orchestrator",
+      "description": "Postflight validation passed",
+      "details": {
+        "gateName": "Delivery Ready",
+        "criteria": [
+          "All requirements met",
+          "Documentation complete",
+          "Postflight validation passed"
+        ]
+      },
+      "tags": ["quality_gate", "delivery", "postflight"]
+    },
+    {
+      "id": "evt_045",
+      "timestamp": "2025-10-12T15:22:00Z",
+      "eventType": "phase_completed",
+      "severity": "info",
+      "actor": "orchestrator",
+      "description": "Delivery phase completed successfully",
+      "details": {
+        "phaseId": "Delivery",
+        "duration": 170
+      },
+      "tags": ["phase", "delivery"]
+    },
+    {
+      "id": "evt_046",
+      "timestamp": "2025-10-12T15:22:05Z",
+      "eventType": "output_delivered",
+      "severity": "info",
+      "actor": "orchestrator",
+      "description": "Final deliverable ready for user",
+      "details": {
+        "deliverablePath": "/workflow/integration/final_deliverable.md",
+        "totalFiles": 6,
+        "testCoverage": 98,
+        "tokensUsed": 35000
+      },
+      "tags": ["delivery", "completion"]
+    },
+    {
+      "id": "evt_047",
+      "timestamp": "2025-10-12T15:22:10Z",
+      "eventType": "session_ended",
+      "severity": "info",
+      "actor": "main_agent",
+      "description": "Session completed successfully",
+      "details": {
+        "totalDuration": 3130,
+        "totalAgents": 5,
+        "totalTasks": 6,
+        "totalTodos": 15,
+        "tokensUsed": 35000,
+        "tokenBudget": 150000,
+        "success": true
+      },
+      "tags": ["lifecycle", "completion"]
+    }
+  ],
+  "summary": {
+    "totalEvents": 47,
+    "eventsByType": {
+      "session_started": 1,
+      "session_ended": 1,
+      "phase_started": 5,
+      "phase_completed": 5,
+      "agent_launched": 3,
+      "agent_completed": 5,
+      "task_started": 9,
+      "task_completed": 9,
+      "workbook_entry_added": 10,
+      "quality_gate_passed": 4,
+      "decision_made": 1,
+      "file_created": 1,
+      "output_delivered": 1
+    },
+    "eventsBySeverity": {
+      "debug": 0,
+      "info": 47,
+      "warning": 0,
+      "error": 0,
+      "critical": 0
+    },
+    "totalErrors": 0,
+    "totalWarnings": 0,
+    "agentsLaunched": 5,
+    "agentsCompleted": 5,
+    "agentsFailed": 0
+  },
+  "metadata": {
+    "lastEventAt": "2025-10-12T15:22:10Z",
+    "version": "1.0.0"
+  }
+}

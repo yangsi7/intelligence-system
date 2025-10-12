@@ -1,0 +1,219 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Workbook Session Template",
+  "description": "Template for session workbook tracking insights, decisions, diagrams, and notes",
+  "type": "object",
+  "properties": {
+    "sessionId": {
+      "type": "string",
+      "format": "uuid",
+      "description": "Session ID matching planning-session.json"
+    },
+    "timestamp": {
+      "type": "string",
+      "format": "date-time",
+      "description": "ISO-8601 timestamp of creation"
+    },
+    "entries": {
+      "type": "array",
+      "description": "Workbook entries in chronological order",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "description": "Unique entry identifier"
+          },
+          "timestamp": {
+            "type": "string",
+            "format": "date-time",
+            "description": "When entry was created"
+          },
+          "type": {
+            "type": "string",
+            "enum": ["note", "insight", "decision", "diagram", "brainstorm", "question", "answer", "reflection"],
+            "description": "Entry type"
+          },
+          "title": {
+            "type": "string",
+            "description": "Entry title or summary"
+          },
+          "content": {
+            "type": "string",
+            "description": "Full entry content (markdown supported)"
+          },
+          "author": {
+            "type": "string",
+            "description": "Agent or user who created entry (main, orchestrator, agent_X, user)"
+          },
+          "relatedPhase": {
+            "type": "string",
+            "enum": ["Context", "Analysis", "Research", "Brainstorm", "Planning", "Execution", "Review", "Delivery"],
+            "description": "Workflow phase this entry relates to"
+          },
+          "relatedTask": {
+            "type": "string",
+            "pattern": "^task_[0-9]+$",
+            "description": "Task ID from planning-session.json if applicable"
+          },
+          "relatedTodo": {
+            "type": "string",
+            "format": "uuid",
+            "description": "Todo ID from todo-session.json if applicable"
+          },
+          "relevantAgents": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Agents that should be aware of this entry"
+          },
+          "tags": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Tags for categorization and search"
+          },
+          "priority": {
+            "type": "string",
+            "enum": ["critical", "high", "medium", "low"],
+            "default": "medium",
+            "description": "Entry importance"
+          },
+          "references": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "enum": ["file", "url", "entry"],
+                  "description": "Reference type"
+                },
+                "path": {
+                  "type": "string",
+                  "description": "File path, URL, or entry ID"
+                },
+                "description": {
+                  "type": "string",
+                  "description": "What this reference provides"
+                }
+              },
+              "required": ["type", "path"]
+            },
+            "description": "References to files, URLs, or other entries"
+          },
+          "metadata": {
+            "type": "object",
+            "description": "Additional metadata",
+            "properties": {
+              "codeSnippet": {
+                "type": "boolean",
+                "description": "True if content contains code"
+              },
+              "language": {
+                "type": "string",
+                "description": "Programming language if code snippet"
+              },
+              "diagramType": {
+                "type": "string",
+                "enum": ["flowchart", "sequence", "architecture", "tree", "graph", "other"],
+                "description": "Type of diagram if type=diagram"
+              },
+              "actionRequired": {
+                "type": "boolean",
+                "description": "True if this entry requires action"
+              },
+              "resolved": {
+                "type": "boolean",
+                "description": "True if question answered or decision implemented"
+              }
+            }
+          }
+        },
+        "required": ["id", "timestamp", "type", "title", "content", "author"]
+      }
+    },
+    "index": {
+      "type": "object",
+      "description": "Index for quick lookup",
+      "properties": {
+        "byType": {
+          "type": "object",
+          "description": "Entry IDs grouped by type",
+          "patternProperties": {
+            ".*": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "format": "uuid"
+              }
+            }
+          }
+        },
+        "byPhase": {
+          "type": "object",
+          "description": "Entry IDs grouped by phase",
+          "patternProperties": {
+            ".*": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "format": "uuid"
+              }
+            }
+          }
+        },
+        "byTag": {
+          "type": "object",
+          "description": "Entry IDs grouped by tag",
+          "patternProperties": {
+            ".*": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "format": "uuid"
+              }
+            }
+          }
+        },
+        "byPriority": {
+          "type": "object",
+          "description": "Entry IDs grouped by priority",
+          "patternProperties": {
+            ".*": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "format": "uuid"
+              }
+            }
+          }
+        }
+      }
+    },
+    "metadata": {
+      "type": "object",
+      "properties": {
+        "totalEntries": {
+          "type": "integer",
+          "description": "Total number of entries"
+        },
+        "lastUpdatedAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "lastUpdatedBy": {
+          "type": "string"
+        },
+        "version": {
+          "type": "string",
+          "default": "1.0.0"
+        }
+      }
+    }
+  },
+  "required": ["sessionId", "timestamp", "entries"]
+}

@@ -1,0 +1,244 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Planning Session Template",
+  "description": "Template for tracking planning state and progress through workflow phases",
+  "type": "object",
+  "properties": {
+    "sessionId": {
+      "type": "string",
+      "format": "uuid",
+      "description": "Unique identifier for this session"
+    },
+    "timestamp": {
+      "type": "string",
+      "format": "date-time",
+      "description": "ISO-8601 timestamp of session creation"
+    },
+    "taskDescription": {
+      "type": "string",
+      "description": "User's original task request"
+    },
+    "taskClassification": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": ["novel", "standard", "analysis-heavy"],
+          "description": "Task type classification"
+        },
+        "complexity": {
+          "type": "string",
+          "enum": ["low", "medium", "high"],
+          "description": "Task complexity level"
+        },
+        "intelligenceLevel": {
+          "type": "string",
+          "enum": ["compact", "standard", "extended"],
+          "description": "Intelligence analysis depth required"
+        }
+      },
+      "required": ["type", "complexity", "intelligenceLevel"]
+    },
+    "orchestratorType": {
+      "type": "string",
+      "enum": ["meta", "normal", "integrated"],
+      "description": "Selected orchestrator pattern"
+    },
+    "phases": {
+      "type": "array",
+      "description": "Workflow phases with status tracking",
+      "items": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "enum": ["Context", "Analysis", "Research", "Brainstorm", "Planning", "Execution", "Review", "Delivery"]
+          },
+          "status": {
+            "type": "string",
+            "enum": ["pending", "in_progress", "completed", "skipped"],
+            "description": "Current phase status"
+          },
+          "startedAt": {
+            "type": "string",
+            "format": "date-time",
+            "description": "When phase started"
+          },
+          "completedAt": {
+            "type": "string",
+            "format": "date-time",
+            "description": "When phase completed"
+          },
+          "notes": {
+            "type": "string",
+            "description": "Optional notes about this phase"
+          }
+        },
+        "required": ["name", "status"]
+      }
+    },
+    "currentPhase": {
+      "type": "string",
+      "description": "Name of current phase in progress"
+    },
+    "completedPhases": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "List of completed phase names"
+    },
+    "requirements": {
+      "type": "array",
+      "description": "User requirements extracted from task",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "description": {
+            "type": "string"
+          },
+          "priority": {
+            "type": "string",
+            "enum": ["critical", "high", "medium", "low"]
+          },
+          "status": {
+            "type": "string",
+            "enum": ["pending", "in_progress", "completed"]
+          }
+        },
+        "required": ["id", "description", "priority", "status"]
+      }
+    },
+    "deliverables": {
+      "type": "array",
+      "description": "Expected deliverables",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "description": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string",
+            "enum": ["pending", "in_progress", "completed"]
+          },
+          "location": {
+            "type": "string",
+            "description": "File path to deliverable"
+          }
+        },
+        "required": ["id", "description", "status"]
+      }
+    },
+    "tasks": {
+      "type": "object",
+      "description": "Task decomposition with dependencies",
+      "patternProperties": {
+        "^task_[0-9]+$": {
+          "type": "object",
+          "properties": {
+            "name": {
+              "type": "string"
+            },
+            "description": {
+              "type": "string"
+            },
+            "agent": {
+              "type": "string",
+              "enum": ["orchestrator", "researcher", "implementor", "reviewer", "tester", "postflight", "custom"]
+            },
+            "dependencies": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "pattern": "^task_[0-9]+$"
+              }
+            },
+            "wave": {
+              "type": "integer",
+              "minimum": 1,
+              "description": "Execution wave number"
+            },
+            "status": {
+              "type": "string",
+              "enum": ["pending", "in_progress", "completed", "failed"]
+            },
+            "startedAt": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "completedAt": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "filesInScope": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "successCriteria": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          "required": ["name", "agent", "dependencies", "wave", "status"]
+        }
+      }
+    },
+    "tokenBudget": {
+      "type": "object",
+      "properties": {
+        "total": {
+          "type": "integer",
+          "default": 200000,
+          "description": "Total token budget for session"
+        },
+        "used": {
+          "type": "integer",
+          "default": 0,
+          "description": "Tokens used so far"
+        },
+        "allocation": {
+          "type": "object",
+          "description": "Token allocation by phase/agent",
+          "patternProperties": {
+            ".*": {
+              "type": "integer"
+            }
+          }
+        }
+      },
+      "required": ["total", "used"]
+    },
+    "metadata": {
+      "type": "object",
+      "properties": {
+        "createdBy": {
+          "type": "string",
+          "enum": ["main", "orchestrator"],
+          "default": "main"
+        },
+        "lastUpdatedAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "version": {
+          "type": "string",
+          "default": "1.0.0"
+        }
+      }
+    }
+  },
+  "required": ["sessionId", "timestamp", "taskDescription", "orchestratorType", "phases", "tokenBudget"]
+}

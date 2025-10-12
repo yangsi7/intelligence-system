@@ -488,41 +488,299 @@ RUN Postflight Validation:
   □ Performance benchmarks met
 ```
 
-## 6. BEST PRACTICES
+## 6. SESSION MANAGEMENT & WORKFLOW PROCESSES
 
-### 6.1 Orchestrator Selection
+### 6.1 Session Management Overview
+
+Every task execution is tracked through a unified session management system that maintains state across all workflow phases and agents. This ensures complete auditability, resumability, and progress tracking.
+
+**Core Components:**
+- **Planning State** - Task classification, phase tracking, token budget
+- **Todo Tracking** - Granular task completion with agent assignments
+- **Workbook** - Insights, decisions, diagrams, and notes
+- **Event Stream** - Complete audit trail of all actions
+
+### 6.2 Workflow Process Modules
+
+The system follows an 8-module workflow process adapted from Manus-inspired agentic principles:
+
+```
+Context → Analysis → Research → Brainstorm → Planning → Execution → Review → Delivery
+```
+
+**Full Process Documentation:**
+📚 @ops/claude-process.md
+
+**Key Process Principles:**
+1. **Research First, Act Later** - Never implement without context
+2. **Intelligence Gathered Once** - Share via `@` references
+3. **File-Based Communication** - Agents never communicate directly
+4. **Parallel Execution** - Maximize concurrency
+5. **Quality Gates** - Validate before each phase transition
+6. **Complete Outputs** - Never use placeholders
+
+**Module Overview:**
+
+| Module | Purpose | Outputs |
+|--------|---------|---------|
+| **Context** | Understand goals, classify task, select orchestrator | Planning docs, session files |
+| **Analysis** | Run intelligence analysis, map architecture | Shared intelligence context |
+| **Research** | Gather external information, validate sources | Research report |
+| **Brainstorm** | Generate approaches, evaluate alternatives | Decision documentation |
+| **Planning** | Decompose tasks, assign agents, allocate tokens | Implementation plan, todos |
+| **Execution** | Dispatch agents, monitor progress, handle failures | Agent results |
+| **Review** | Validate outputs, check requirements | Review report, issues |
+| **Delivery** | Aggregate results, apply changes, validate | Final deliverable |
+
+### 6.3 Coordination Rules & Standards
+
+Comprehensive operational rules govern agent behavior, communication, and quality:
+
+📚 @principles/claude-rules.md
+
+**Critical Rules:**
+- **Rule 1:** File-Based Communication Only
+- **Rule 2:** Intelligence Gathered Once
+- **Rule 3:** Parallel Execution via Single Message
+- **Rule 4:** Use @ References for Zero-Token Loading
+- **Rule 5:** Session State Management
+- **Rule 6:** Shared Resource Access Protocol
+
+**Rule Categories:**
+- Planning Rules (when/how to create plans)
+- Todo Rules (tracking and updating)
+- Writing Rules (formatting and completeness)
+- Coding Rules (tests, style, documentation)
+- File Rules (manipulation and cleanup)
+- Shell Rules (command chaining, safety)
+- Browser/Research Rules (source validation)
+- Error Handling Rules (interpretation, recovery)
+- Agent-Specific Rules (responsibilities by role)
+- Quality Standards (completeness, coverage, security)
+- Token Optimization Rules (progressive disclosure)
+- Anti-Patterns (things to never do)
+
+### 6.4 Session State Files
+
+All session state is tracked in JSON files with unique session IDs to prevent collisions:
+
+**Session Directory Structure:**
+```
+session/
+├── planning-<sessionId>.json     # Task classification, phases, requirements
+├── todo-<sessionId>.json          # Granular task tracking with agents
+├── workbook-<sessionId>.json      # Insights, decisions, diagrams
+└── events-<sessionId>.json        # Complete event audit trail
+```
+
+**Session File Templates:**
+- @templates/planning-session.json
+- @templates/todo-session.json
+- @templates/workbook-session.json
+- @templates/event-stream-session.json
+
+**Session State Access Matrix:**
+
+| Resource | Main Agent | Orchestrator | Agents |
+|----------|------------|--------------|--------|
+| planning-*.json | R/W | R/W | R (via @) |
+| todo-*.json | R/W | R/W | R/W (own todos) |
+| workbook-*.json | R/W | R/W | R/W (append only) |
+| events-*.json | R/W | R/W | W (append only) |
+
+**Creating Session Files:**
+```bash
+# Generate new session ID
+SESSION_ID=$(uuidgen | tr '[:upper:]' '[:lower:]')
+
+# Initialize from templates
+cp templates/planning-session.json session/planning-$SESSION_ID.json
+cp templates/todo-session.json session/todo-$SESSION_ID.json
+cp templates/workbook-session.json session/workbook-$SESSION_ID.json
+cp templates/event-stream-session.json session/events-$SESSION_ID.json
+
+# Update sessionId in all files
+for file in session/*-$SESSION_ID.json; do
+  # Use jq to update sessionId field
+  jq --arg sid "$SESSION_ID" '.sessionId = $sid' "$file" > "$file.tmp"
+  mv "$file.tmp" "$file"
+done
+```
+
+### 6.5 Session Context Extraction
+
+Extract and view current session context with a single command:
+
+**Usage:**
+```bash
+# Extract most recent session
+./scripts/extract-session-context.sh
+
+# Extract specific session
+./scripts/extract-session-context.sh <session-id>
+```
+
+**Output Includes:**
+- Task summary and classification
+- Phase progress
+- Token usage
+- Requirements status
+- Todo progress (completed, in-progress, pending)
+- Key insights and decisions
+- Recent events (last 30)
+- Agent activity summary
+
+**Example Output:**
+```
+═══════════════════════════════════════════════════════════════
+Session Context Report
+═══════════════════════════════════════════════════════════════
+
+Session ID: 550e8400-e29b-41d4-a716-446655440000
+Generated: 2025-10-12T14:30:00Z
+
+## Planning Context
+
+Task: Add password reset functionality
+Classification: standard, medium, standard
+Orchestrator: normal
+Current Phase: Execution
+
+Phase Progress:
+- [x] Context (completed)
+- [x] Analysis (completed)
+- [ ] Research (skipped)
+- [x] Brainstorm (completed)
+- [x] Planning (completed)
+- [ ] Execution (in_progress)
+- [ ] Review (pending)
+- [ ] Delivery (pending)
+
+Token Budget: 45k / 200k (22%)
+
+## Todo Progress
+
+Summary: 2/5 completed (1 in progress, 2 pending, 0 failed)
+
+Currently Working On:
+- Implement password reset endpoint (assigned to: implementor)
+  Active form: Implementing password reset endpoint
+
+Recently Completed:
+- ✓ Research auth patterns (by researcher)
+- ✓ Create implementation plan (by orchestrator)
+
+...
+```
+
+### 6.6 Workbook Usage
+
+The workbook serves as a shared scratchpad for capturing insights, decisions, and diagrams:
+
+**Entry Types:**
+- **note** - General observations or reminders
+- **insight** - Key discoveries or realizations
+- **decision** - Architectural or implementation choices
+- **diagram** - ASCII art or visual representations
+- **brainstorm** - Generated ideas or approaches
+- **question** - Open questions needing answers
+- **answer** - Answers to previously asked questions
+- **reflection** - Meta-analysis of progress or approach
+
+**Adding Workbook Entries:**
+```json
+{
+  "entries": [{
+    "id": "<uuid>",
+    "timestamp": "2025-10-12T14:30:00Z",
+    "type": "decision",
+    "title": "Use JWT for password reset tokens",
+    "content": "After evaluating options, chose JWT with 1-hour expiry...",
+    "author": "main",
+    "relatedPhase": "Brainstorm",
+    "tags": ["security", "architecture"],
+    "priority": "high"
+  }]
+}
+```
+
+**Agents can read workbook entries to understand context and decisions made earlier in the workflow.**
+
+### 6.7 Event Stream Tracking
+
+Every significant action is logged to the event stream for complete auditability:
+
+**Event Types:**
+- Session lifecycle (started, ended)
+- Phase transitions (started, completed)
+- Agent operations (launched, completed, failed)
+- Task operations (started, completed, failed)
+- Todo updates (created, updated, completed, failed)
+- Intelligence operations (started, completed)
+- Errors and warnings
+- Quality gate results
+- Decisions made
+- File operations
+- User interactions
+
+**Querying Events:**
+```bash
+# Get recent events
+jq '.events | sort_by(.timestamp) | reverse | .[0:30]' session/events-<sessionId>.json
+
+# Get errors only
+jq '.events[] | select(.severity == "error")' session/events-<sessionId>.json
+
+# Get agent activity
+jq '.events[] | select(.eventType | startswith("agent_"))' session/events-<sessionId>.json
+
+# Get events for specific phase
+jq '.events[] | select(.details.phaseId == "Execution")' session/events-<sessionId>.json
+```
+
+## 7. BEST PRACTICES
+
+### 7.1 Orchestrator Selection
 - **Default to Integrated** for unfamiliar codebases
 - **Use Normal** for routine development tasks
 - **Reserve Meta** for truly specialized domains
 - **Chain orchestrators** for multi-phase projects
 
-### 6.2 Intelligence Gathering
+### 7.2 Intelligence Gathering
 - **Run compact first** for quick context
 - **Use targeted analysis** for specific domains
 - **Aggregate reports** before implementation
 - **Reference via @-notation** to save tokens
 
-### 6.3 Agent Coordination
+### 7.3 Agent Coordination
 - **Parallelize independent work** (single message, multiple Task calls)
 - **Sequential for dependencies** (wait for results before next agent)
 - **Monitor progress.json** to track agent states
 - **Use completion signals** to coordinate waves
 
-### 6.4 Workflow Definition
+### 7.4 Workflow Definition
 - **Create custom workflows** for repeated patterns
 - **Use built-in chains** when applicable
 - **Store workflows in** `.claude/workflows/`
 - **Execute via** `/workflow run <file>`
 
-### 6.5 File Management
+### 7.5 File Management
 - **Archive temporary files** after completion
 - **Retain planning files** for audit
 - **Use .archive/** for superseded files
 - **Clean up completion signals** after aggregation
 
-## 7. TROUBLESHOOTING
+### 7.6 Session Management
+- **Initialize session files** at task start
+- **Update todos in real-time** as work progresses
+- **Document decisions** in workbook
+- **Log significant events** to event stream
+- **Extract context** regularly to review progress
+- **Archive completed sessions** for future reference
 
-### 7.1 Common Issues
+## 8. TROUBLESHOOTING
+
+### 8.1 Common Issues
 
 **"I'm not sure which orchestrator to use"**
 → Start with **Integrated Orchestrator** (comprehensive approach)
@@ -545,7 +803,13 @@ RUN Postflight Validation:
 **"Token budget exceeded"**
 → Use @-references instead of loading full files
 
-### 7.2 Error Recovery
+**"Session files not found"**
+→ Initialize session files from templates (see Section 6.4)
+
+**"Can't extract session context"**
+→ Ensure jq is installed, check session ID is correct
+
+### 8.2 Error Recovery
 
 **Agent Timeout:**
 1. Check agent context package for errors
@@ -565,7 +829,13 @@ RUN Postflight Validation:
 3. Verify slash command permissions
 4. Review error logs in agent outputs
 
-## 8. FILE LOCATIONS REFERENCE
+**Session State Corruption:**
+1. Extract what you can with extract-session-context.sh
+2. Archive corrupted files
+3. Reinitialize from templates
+4. Document what was lost in workbook
+
+## 9. FILE LOCATIONS REFERENCE
 
 ```
 .claude/
@@ -612,9 +882,35 @@ RUN Postflight Validation:
 │   └── final_deliverable.md
 └── monitoring/
     └── progress.json
+
+/session/
+├── planning-<sessionId>.json
+├── todo-<sessionId>.json
+├── workbook-<sessionId>.json
+└── events-<sessionId>.json
+
+/templates/
+├── planning-session.json
+├── todo-session.json
+├── workbook-session.json
+└── event-stream-session.json
+
+/ops/
+├── claude-process.md (workflow process documentation)
+└── README.md (process overview)
+
+/principles/
+├── claude-rules.md (coordination rules and standards)
+└── README.md (rules overview)
+
+/scripts/
+└── extract-session-context.sh (session context extraction)
+
+/analysis/
+└── intelligence-system-tot.md (system architecture analysis)
 ```
 
-## 9. QUICK COMMAND REFERENCE
+## 10. QUICK COMMAND REFERENCE
 
 ```bash
 # Intelligence Analysis
@@ -650,50 +946,71 @@ node .claude/improved_intelligence/code-intel.mjs preset compact
 node .claude/improved_intelligence/code-intel.mjs chain onboarding.json
 ```
 
-## 10. GETTING STARTED
+## 11. GETTING STARTED
 
 **First-Time Setup:**
 1. Ensure Node.js ≥18 installed
 2. Run `/index` to generate PROJECT_INDEX.json
 3. Review `@.claude/ORCHESTRATOR_SELECTION_GUIDE.md`
-4. Run `/intel compact` for quick overview
+4. Review `@ops/claude-process.md` and `@principles/claude-rules.md`
+5. Run `/intel compact` for quick overview
 
 **For Each New Task:**
-1. Classify task type (novel/standard/analysis-heavy)
-2. Select appropriate orchestrator
-3. Run intelligence analysis if needed
-4. Invoke orchestrator with task description
-5. Monitor progress via progress.json
-6. Validate with postflight checks
+1. Initialize session files from templates (see Section 6.4)
+2. Classify task type (novel/standard/analysis-heavy)
+3. Select appropriate orchestrator
+4. Run intelligence analysis if needed
+5. Invoke orchestrator with task description
+6. Monitor progress via session files and progress.json
+7. Extract context regularly with `./scripts/extract-session-context.sh`
+8. Validate with postflight checks
+9. Archive completed session
 
 **Example Session:**
 ```bash
-# 1. Get quick codebase overview
+# 1. Initialize session
+SESSION_ID=$(uuidgen | tr '[:upper:]' '[:lower:]')
+cp templates/*.json session/
+# Update sessionIds in files...
+
+# 2. Get quick codebase overview
 /intel compact
 
-# 2. Identify hotspots needing attention
+# 3. Identify hotspots needing attention
 /intel hotspots --limit 10
 
-# 3. Run comprehensive audit
+# 4. Run comprehensive audit
 /intel extended
 
-# 4. Invoke orchestrator with intelligence
+# 5. Invoke orchestrator with intelligence
 /orchestrate integrated "Refactor authentication system for better security"
 
-# 5. Monitor progress
+# 6. Monitor progress
+./scripts/extract-session-context.sh $SESSION_ID
+
+# 7. Check orchestrator coordinates agents
 [Orchestrator coordinates agents automatically]
 
-# 6. Review final deliverable
+# 8. Review final deliverable
 [Check /workflow/integration/final_deliverable.md]
+
+# 9. Archive session
+tar -czf archives/session-$SESSION_ID.tar.gz workflow/ session/
 ```
 
 ---
 
-**System Version:** 1.0.0
-**Last Updated:** 2025-10-11
-**Documentation:** See `.claude/improved_intelligence/README.md` and `.claude/ORCHESTRATOR_SELECTION_GUIDE.md`
+**System Version:** 1.1.0
+**Last Updated:** 2025-10-12
+**Documentation:**
+- Intelligence System: `.claude/improved_intelligence/README.md`
+- Orchestrator Selection: `.claude/ORCHESTRATOR_SELECTION_GUIDE.md`
+- Workflow Process: `ops/claude-process.md`
+- Coordination Rules: `principles/claude-rules.md`
+- System Architecture: `analysis/intelligence-system-tot.md`
+
 **Support:** Review agent definitions in `.claude/agents/*.md` for detailed capabilities
 
 ---
 
-*Ultimate Intelligence System — Intelligence-Driven Multi-Agent Orchestration*
+*Ultimate Intelligence System — Intelligence-Driven Multi-Agent Orchestration with Session Management*

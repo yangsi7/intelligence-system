@@ -1,0 +1,103 @@
+{
+  "sessionId": "b8e4d9f3-0c2e-5a7f-9d3b-2e6f0a9c4d8f",
+  "timestamp": "2025-10-12T10:06:00Z",
+  "entries": [
+    {
+      "id": "wb_001",
+      "timestamp": "2025-10-12T10:10:00Z",
+      "type": "insight",
+      "title": "N+1 query pattern identified in getData()",
+      "content": "Standard intelligence analysis revealed classic N+1 pattern: 1 query fetches items, then N queries fetch relationships. For 100 items = 101 database round-trips. Located at src/api/data.ts:45-67.",
+      "author": "agent_intel_001",
+      "relatedPhase": "Analysis",
+      "tags": ["n+1", "performance", "database"],
+      "priority": "critical"
+    },
+    {
+      "id": "wb_002",
+      "timestamp": "2025-10-12T10:15:00Z",
+      "type": "diagram",
+      "title": "N+1 Query Pattern Flow",
+      "content": "```mermaid\nsequenceDiagram\n    API->>DB: SELECT * FROM items\n    DB-->>API: 100 items\n    loop For each item\n        API->>DB: SELECT * FROM relationships WHERE item_id=?\n    end\n    Note: 101 total queries\n```",
+      "author": "agent_intel_001",
+      "relatedPhase": "Analysis",
+      "tags": ["diagram", "n+1"],
+      "metadata": {
+        "diagramType": "sequence"
+      }
+    },
+    {
+      "id": "wb_003",
+      "timestamp": "2025-10-12T10:20:00Z",
+      "type": "insight",
+      "title": "Missing database indexes causing full table scans",
+      "content": "Extended analysis found 3 foreign keys without indexes:\n- items.user_id (joins with users)\n- relationships.item_id (joins with items)\n- users.email (frequent lookups)\n\nDatabase EXPLAIN shows full table scans for all queries involving these columns.",
+      "author": "agent_intel_001",
+      "relatedPhase": "Analysis",
+      "tags": ["database", "indexes", "performance"],
+      "priority": "high"
+    },
+    {
+      "id": "wb_004",
+      "timestamp": "2025-10-12T10:28:00Z",
+      "type": "note",
+      "title": "Industry best practice: Eager loading for N+1",
+      "content": "Research findings from Postgres documentation and ORM guides:\n\n1. Use JOIN to fetch related data in single query\n2. For ORMs: use eager loading (e.g., include, preload)\n3. Consider data loader pattern for GraphQL-style queries\n4. Monitor query count with pg_stat_statements\n\nAll approaches validated in production systems with similar patterns.",
+      "author": "agent_researcher_001",
+      "relatedPhase": "Research",
+      "tags": ["research", "best-practices"],
+      "priority": "medium"
+    },
+    {
+      "id": "wb_005",
+      "timestamp": "2025-10-12T10:35:00Z",
+      "type": "decision",
+      "title": "Prioritize quick wins over caching layer",
+      "content": "Evaluated 5 optimization approaches:\n\n1. Fix N+1 queries (HIGH impact, MEDIUM effort) ✓\n2. Add database indexes (HIGH impact, LOW effort) ✓\n3. Optimize serialization (HIGH impact, LOW effort) ✓\n4. Implement caching (MEDIUM impact, HIGH effort) ✗ Deferred\n5. Horizontal scaling (LOW impact, HIGH cost) ✗ Rejected\n\nSelected top 3 for immediate implementation. Combined effort: ~40 minutes. Expected improvement: 90%+.",
+      "author": "orchestrator",
+      "relatedPhase": "Brainstorm",
+      "tags": ["decision", "prioritization"],
+      "priority": "high"
+    },
+    {
+      "id": "wb_006",
+      "timestamp": "2025-10-12T10:59:00Z",
+      "type": "insight",
+      "title": "Intelligence token efficiency: 28K saved 50K+",
+      "content": "Running comprehensive intelligence up-front (28,000 tokens) allowed 5 downstream agents to reference findings via @ notation at near-zero cost.\n\nEstimated savings:\n- Without intelligence: 5 agents × 10K tokens = 50K\n- With intelligence: 28K + ~0K references = 28K\n- Net savings: 22K tokens (44%)\n\nAlso prevented wasted implementation effort on wrong solutions.",
+      "author": "orchestrator",
+      "relatedPhase": "Review",
+      "tags": ["token-optimization", "intelligence"],
+      "priority": "medium"
+    },
+    {
+      "id": "wb_007",
+      "timestamp": "2025-10-12T11:23:00Z",
+      "type": "note",
+      "title": "Performance benchmarks - before/after",
+      "content": "**Before Optimization:**\n- /api/data (100 items): 8.5s\n- /api/data (1000 items): 45s\n- /api/search (simple): 6.2s\n- /api/search (complex): 12.4s\n\n**After Optimization:**\n- /api/data (100 items): 0.3s (96% improvement)\n- /api/data (1000 items): 2.1s (95% improvement)\n- /api/search (simple): 0.8s (87% improvement)\n- /api/search (complex): 1.6s (87% improvement)\n\nAll optimizations deployed, zero regressions.",
+      "author": "agent_tester_001",
+      "relatedPhase": "Review",
+      "tags": ["benchmarks", "performance", "metrics"],
+      "priority": "critical"
+    }
+  ],
+  "index": {
+    "byType": {
+      "insight": ["wb_001", "wb_003", "wb_006"],
+      "diagram": ["wb_002"],
+      "note": ["wb_004", "wb_007"],
+      "decision": ["wb_005"]
+    },
+    "byPhase": {
+      "Analysis": ["wb_001", "wb_002", "wb_003"],
+      "Research": ["wb_004"],
+      "Brainstorm": ["wb_005"],
+      "Review": ["wb_006", "wb_007"]
+    }
+  },
+  "metadata": {
+    "totalEntries": 7,
+    "version": "1.0.0"
+  }
+}

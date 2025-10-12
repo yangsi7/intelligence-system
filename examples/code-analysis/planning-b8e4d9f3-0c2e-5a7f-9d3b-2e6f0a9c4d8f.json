@@ -1,0 +1,194 @@
+{
+  "sessionId": "b8e4d9f3-0c2e-5a7f-9d3b-2e6f0a9c4d8f",
+  "timestamp": "2025-10-12T10:00:00Z",
+  "taskDescription": "Investigate and fix performance bottlenecks in /api/data and /api/search endpoints",
+  "taskClassification": {
+    "type": "analysis-heavy",
+    "complexity": "high",
+    "intelligenceLevel": "extended",
+    "requiresResearch": true,
+    "requiresExternalData": true
+  },
+  "orchestratorType": "integrated",
+  "currentPhase": "Delivery",
+  "phases": [
+    {
+      "name": "Context",
+      "status": "completed",
+      "startedAt": "2025-10-12T10:00:00Z",
+      "completedAt": "2025-10-12T10:06:00Z",
+      "duration": 360
+    },
+    {
+      "name": "Analysis",
+      "status": "completed",
+      "startedAt": "2025-10-12T10:06:00Z",
+      "completedAt": "2025-10-12T10:23:00Z",
+      "duration": 1020,
+      "outputs": [
+        "/workflow/intel/compact_analysis.md",
+        "/workflow/intel/standard_analysis.md",
+        "/workflow/intel/extended_analysis.md",
+        "/workflow/intel/graph_analysis.md",
+        "/workflow/intel/intelligence_report.md"
+      ]
+    },
+    {
+      "name": "Research",
+      "status": "completed",
+      "startedAt": "2025-10-12T10:23:00Z",
+      "completedAt": "2025-10-12T10:30:00Z",
+      "duration": 420
+    },
+    {
+      "name": "Brainstorm",
+      "status": "completed",
+      "startedAt": "2025-10-12T10:30:00Z",
+      "completedAt": "2025-10-12T10:38:00Z",
+      "duration": 480
+    },
+    {
+      "name": "Planning",
+      "status": "completed",
+      "startedAt": "2025-10-12T10:38:00Z",
+      "completedAt": "2025-10-12T10:45:00Z",
+      "duration": 420
+    },
+    {
+      "name": "Execution",
+      "status": "completed",
+      "startedAt": "2025-10-12T10:45:00Z",
+      "completedAt": "2025-10-12T11:15:00Z",
+      "duration": 1800
+    },
+    {
+      "name": "Review",
+      "status": "completed",
+      "startedAt": "2025-10-12T11:15:00Z",
+      "completedAt": "2025-10-12T11:25:00Z",
+      "duration": 600
+    },
+    {
+      "name": "Delivery",
+      "status": "completed",
+      "startedAt": "2025-10-12T11:25:00Z",
+      "completedAt": "2025-10-12T11:30:00Z",
+      "duration": 300
+    }
+  ],
+  "tasks": {
+    "task_1": {
+      "id": "task_1",
+      "description": "Run multi-pass intelligence analysis on codebase",
+      "assignedAgent": "intelligence-analyzer",
+      "wave": 0,
+      "status": "completed",
+      "impactScore": 10,
+      "actualTokens": 28000
+    },
+    "task_2": {
+      "id": "task_2",
+      "description": "Research performance optimization best practices",
+      "assignedAgent": "researcher",
+      "wave": 0,
+      "status": "completed",
+      "actualTokens": 3500
+    },
+    "task_3": {
+      "id": "task_3",
+      "description": "Fix N+1 query problem in /api/data endpoint",
+      "assignedAgent": "implementor",
+      "wave": 1,
+      "status": "completed",
+      "impactScore": 10,
+      "actualTokens": 5000
+    },
+    "task_4": {
+      "id": "task_4",
+      "description": "Add missing database indexes",
+      "assignedAgent": "implementor",
+      "wave": 1,
+      "status": "completed",
+      "impactScore": 9,
+      "actualTokens": 3500
+    },
+    "task_5": {
+      "id": "task_5",
+      "description": "Optimize JSON serialization in /api/search",
+      "assignedAgent": "implementor",
+      "wave": 1,
+      "status": "completed",
+      "impactScore": 8,
+      "actualTokens": 4000
+    }
+  },
+  "tokenBudget": {
+    "total": 150000,
+    "used": 48000,
+    "breakdown": {
+      "Context": 2000,
+      "Analysis": 28000,
+      "Research": 3500,
+      "Brainstorm": 1500,
+      "Planning": 2000,
+      "Execution": 8000,
+      "Review": 2000,
+      "Delivery": 1000
+    }
+  },
+  "intelligenceFindingsSummary": [
+    "N+1 query pattern in src/api/data.ts causing 101 queries for 100 items",
+    "Missing indexes on items.user_id, users.email, relationships.item_id",
+    "Inefficient JSON serialization in search endpoint (O(n) per-item overhead)",
+    "Circular dependency between data-service.ts and cache-service.ts causing memory leak",
+    "No query result caching despite high read/write ratio (95% reads)"
+  ],
+  "requirements": [
+    {
+      "id": "req_1",
+      "description": "/api/data response time < 1s for 100 items",
+      "priority": "critical",
+      "status": "completed",
+      "verificationMethod": "Performance benchmark - achieved 0.3s"
+    },
+    {
+      "id": "req_2",
+      "description": "/api/search response time < 2s for simple queries",
+      "priority": "critical",
+      "status": "completed",
+      "verificationMethod": "Performance benchmark - achieved 0.8s"
+    },
+    {
+      "id": "req_3",
+      "description": "Zero regressions in existing functionality",
+      "priority": "critical",
+      "status": "completed",
+      "verificationMethod": "Full test suite passing"
+    }
+  ],
+  "performanceMetrics": {
+    "before": {
+      "/api/data (100 items)": "8.5s",
+      "/api/data (1000 items)": "45s",
+      "/api/search (simple)": "6.2s",
+      "/api/search (complex)": "12.4s"
+    },
+    "after": {
+      "/api/data (100 items)": "0.3s",
+      "/api/data (1000 items)": "2.1s",
+      "/api/search (simple)": "0.8s",
+      "/api/search (complex)": "1.6s"
+    },
+    "improvements": {
+      "/api/data": "96%",
+      "/api/search": "87%"
+    }
+  },
+  "metadata": {
+    "createdBy": "main_agent",
+    "orchestrator": "integrated",
+    "intelligenceTokens": 28000,
+    "implementationTokens": 20000,
+    "version": "1.0.0"
+  }
+}
