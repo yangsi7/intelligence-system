@@ -5,7 +5,18 @@ All notable changes to the Ultimate Intelligence System will be documented in th
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [1.2.1] - 2025-10-12
+## [1.2.1-beta] - 2025-10-12
+
+**Status:** BETA - Testing in progress
+
+This is a beta release of the Project CLAUDE.md Integration System. The feature is fully functional but lacks automated test coverage. Test implementation is planned for v1.2.2 stable.
+
+**Known Limitations:**
+- No automated test suite for integration script
+- Manual testing only
+- Recommended for early adopters and beta testers
+
+**Upgrade Path:** Will be promoted to v1.2.2 stable after test implementation.
 
 ### Added
 - **Project CLAUDE.md Integration System**
