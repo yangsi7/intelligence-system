@@ -7,7 +7,7 @@
         "@modelcontextprotocol/server-brave-search"
       ],
       "env": {
-        "BRAVE_API_KEY": "BSAIjJzq_o-BEF2Qgcs_1ZJaDTGK5qD"
+        "BRAVE_API_KEY": "${BRAVE_API_KEY}"
       }
     },
     "context7": {
@@ -24,7 +24,7 @@
         "firecrawl-mcp"
       ],
       "env": {
-        "FIRECRAWL_API_KEY": "fc-fe2cf828ddd74f0b91514a073d0a5f48",
+        "FIRECRAWL_API_KEY": "${FIRECRAWL_API_KEY_3}",
         "FIRECRAWL_RETRY_MAX_ATTEMPTS": "5",
         "FIRECRAWL_RETRY_INITIAL_DELAY": "2000",
         "FIRECRAWL_RETRY_MAX_DELAY": "30000",
